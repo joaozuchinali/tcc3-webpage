@@ -1,0 +1,12 @@
+<div  
+    class="mb-1 fs-5 p-1 default-item-menu"
+    [ngClass]="{'bg-primary': item.isfocus, 'bg-white': !item.isfocus}"
+    [ngStyle]="{'color': item.isfocus ? 'white' : 'black'}"
+    (click)="navigate(item.page)" 
+    (mouseenter)="item.isfocus = true" 
+    (mouseleave)="item.isfocus = false"
+>
+    <span >
+        {{item.nome}}
+    </span>
+</div>
