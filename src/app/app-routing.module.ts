@@ -6,6 +6,8 @@ import { MainComponent } from './main/main.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ProjetosComponent } from './projetos/projetos.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { EquipesComponent } from './equipes/equipes.component';
+import { ProjetoComponent } from './projetos/projeto/projeto.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -14,9 +16,19 @@ const routes: Routes = [
     path: 'main', 
     component: MainComponent,
     children: [
-      { path: '', component: ProjetosComponent },
-      { path: 'projetos', component: ProjetosComponent },
-      { path: 'perfil', component: PerfilComponent }
+      { 
+        path: 'equipes', component: EquipesComponent, 
+        children: [
+          { 
+            path: 'projetos', component: ProjetosComponent,
+            children: [
+              { path: ':identificador', component: ProjetoComponent}
+            ]
+          }
+        ]
+      },
+      { path: 'perfil', component: PerfilComponent },
+      { path: '', redirectTo: 'equipes', pathMatch: "full"}
     ] 
   },
   { path: 'not-found', component: NotFoundComponent },

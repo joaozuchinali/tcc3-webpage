@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItens } from '../interfaces/menu-itens';
 
@@ -10,7 +10,7 @@ import { MenuItens } from '../interfaces/menu-itens';
 export class MainComponent {
 
   menuitens: MenuItens[] = [
-    { nome: 'Projetos', page: 'projetos', isfocus: false},
+    { nome: 'Equipes', page: 'equipes', isfocus: false},
     { nome: 'Perfil', page: 'perfil', isfocus: false},
     { nome: 'Sair', page: 'exit', isfocus: false}
   ];
