@@ -1,0 +1,44 @@
+<div class="container-fluid align-self-stretch p-0" >
+    <!-- Título da página -->
+    <div class="row border-bottom border-black sticky-top bg-white" style="height: 48px;">
+        <h3>
+            Equipes
+        </h3>
+    </div>
+
+    <!-- Opção de adicionar nova equipe -->
+    <div class="row p-1 mb-2 mt-2" *ngIf="adicionandoEquipe == false">
+        <div class="col-md-12 p-0" style="height: 180px;">
+            <app-create-area [exec]="1" [text]="'Adicionar Equipe'"></app-create-area>
+        </div>
+    </div>
+
+    <!-- Criação de um nova equipe -->
+    <div class="row p-1 mb-2 mt-2" *ngIf="adicionandoEquipe == true">
+        <div class="col-md-12 p-0">
+            <div class="form-group">
+                <label style="font-size: 12px;" for="nome-equipe">
+                    <b>Nome da Equipe:</b>
+                </label>
+                <input class="form-control form-control-sm w-50" id="nome-equipe">
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center">
+            <button class="btn btn-success btn-sm">
+                Adicionar equipe
+            </button>
+
+            <button class="btn btn-danger btn-sm" (click)="cancelarEquipe()">
+                Retornar
+            </button>
+        </div>
+    </div>
+
+    <!-- Listagem das equipes -->
+    <div class="row p-1 mb-2 mt-2">
+        <div class="col-md-12 p-0">
+            <app-item-equipe [nome]="'Equipe 1'"></app-item-equipe>
+        </div>
+    </div>
+</div>
