@@ -1,20 +1,38 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MenuItens } from '../../interfaces/menu-itens';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-item-menu',
   templateUrl: './item-menu.component.html',
   styleUrl: './item-menu.component.scss'
 })
-export class ItemMenuComponent {
+export class ItemMenuComponent implements OnInit {
   @Input('item') item: MenuItens = {nome: '.', isfocus: false, page: ''};
 
   constructor(
     private router: Router,
     private route: ActivatedRoute
   ) {
-    console.log('teste');
+    
+  }
+
+  ngOnInit(): void {
+    this.activateItem();
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+          this.activateItem();
+      }
+    });
+  }
+  activateItem() {
+    if(this.router.url.includes(`/${this.item.page}`)) {
+      this.item.current = true;
+    } else {
+      this.item.current = false;
+    }
   }
 
   navigate(location: string) {
