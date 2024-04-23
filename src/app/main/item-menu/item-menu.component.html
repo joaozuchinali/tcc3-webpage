@@ -1,6 +1,10 @@
 <div  
-    class="mb-1 fs-5 p-1 default-item-menu"
-    [ngClass]="{'bg-primary': item.isfocus, 'bg-white': !item.isfocus}"
+    class="mb-1 ps-3 default-item-menu d-flex align-items-center"
+    [ngClass]="{
+        'border border-start-0 border-end-0': (item.isfocus || item.current == true),
+        'bg-primary-subtle border-primary text-primary': (item.isfocus || item.current == true) && item.page != 'exit',
+        'bg-danger-subtle border-danger text-danger': (item.isfocus || item.current == true) && item.page == 'exit',
+    }"
     [ngStyle]="{'color': item.isfocus ? 'white' : 'black'}"
     (click)="navigate(item.page)" 
     (mouseenter)="item.isfocus = true" 
