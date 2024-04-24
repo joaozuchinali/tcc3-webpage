@@ -3,6 +3,8 @@ import { ActivatedRoute, Data, Router } from '@angular/router';
 import { AddProjetoService } from '../../../utils/add-projeto.service';
 import { Projeto } from '../../../interfaces/projeto';
 import { Equipe } from '../../../interfaces/equipe';
+import { CurrentEquipeService } from '../../../utils/current-equipe.service';
+import { Equipescredenciadas } from '../../../interfaces/equipescredenciadas';
 
 @Component({
   selector: 'app-projetos',
@@ -16,44 +18,75 @@ export class ProjetosComponent implements OnInit{
   codigoAcesso: string = '';
   idequipe: string = '';
 
-  public equipesSelect: Equipe[] = [];
+  equipesSelect: Equipescredenciadas[] = [];
   disableSelectEquipe: boolean = false;
+  disableCreateProjeto: boolean = false;
+  equipeParam: Equipe | null = null;
+
+  projetosAtuais: Projeto[] = [];
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private projetos: AddProjetoService
+    private projetosWatcher: AddProjetoService,
+    private currentEquipe: CurrentEquipeService
   ) {
 
   }
 
   async ngOnInit() {
+    const equipeFilter = this.currentEquipe.getEquipe();
+    if(equipeFilter.idequipe != -1) {
+      this.equipeParam = equipeFilter;
+      this.idequipe = String(equipeFilter.idequipe);
+      this.disableSelectEquipe = true;
+
+      this.getProjetosEquipe();
+    } else {
+      this.getProjetosUsuario();
+    }
+
     this.getEquipes();
-
-    this.route.data.subscribe((data: Data) => {
-      if(data['idequipe']) {
-        this.idequipe = data['idequipe'];
-        this.disableSelectEquipe = true;
-      }
-    });
-
     this.addProjetoEventWatcher();
   }
 
-  getEquipes(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.equipesSelect = [
-        {idequipe: 1, idstatus: 1, nome: 'Equipe 1'},
-        {idequipe: 2, idstatus: 2, nome: 'Equipe 2'},
-        {idequipe: 3, idstatus: 3, nome: 'Equipe 3'}
-      ];
+  // Retorna todas as equipes com as quais o usuário está relacionado
+  getEquipes(): void  {
+    // http get
+    this.equipesSelect = [
+      {idequipe: 1, idstatus: 1, nome: 'Equipe 1', idcredencial: 2},
+      {idequipe: 2, idstatus: 2, nome: 'Equipe 2', idcredencial: 1},
+      {idequipe: 3, idstatus: 3, nome: 'Equipe 3', idcredencial: 2}
+    ];
 
-      resolve(true);
-    });
+    this.verificaCredencialEquipe();
   }
 
+  // Configura o botão de adição do projeto em caso de ser
+  // um redirecionamento da tela de equipe
+  verificaCredencialEquipe(): void {
+    let dis = false;
+
+    if(!dis && this.equipeParam != null) {
+      const vec = this.equipesSelect.filter(e => e.idequipe == this.equipeParam?.idequipe && e.idcredencial == 2);
+      if(!Array.isArray(vec) || !vec.length) {
+        dis = true;
+      }
+    } 
+
+    if(!dis && this.idequipe != '') {
+      const vec = this.equipesSelect.filter(e => e.idequipe == Number(this.idequipe) && e.idcredencial == 2);
+      if(!Array.isArray(vec) || !vec.length) {
+        dis = true;
+      }
+    }
+
+    this.disableCreateProjeto = dis;
+  }
+
+  // Verifica quando clicou em criar
   addProjetoEventWatcher() {
-    this.projetos.addProjeto.subscribe((value) => {
+    this.projetosWatcher.addProjeto.subscribe((value) => {
       this.adicionandoProjeto = true;
     });
   }
@@ -100,5 +133,30 @@ export class ProjetosComponent implements OnInit{
   // Cancelar a criação do novo registro
   cancelarProjeto() {
     this.adicionandoProjeto = false;
+  }
+
+  getProjetosEquipe(): void {
+    // http get
+    this.projetosAtuais = [
+      {codigo: 1, identificador: 'X', idequipe: 1, idprojeto: 1, idstatus: 1, nome: 'Projeto 10'},
+      {codigo: 1, identificador: 'Y', idequipe: 2, idprojeto: 2, idstatus: 1, nome: 'Projeto 20'},
+      {codigo: 1, identificador: 'Z', idequipe: 3, idprojeto: 3, idstatus: 1, nome: 'Projeto 30'}
+    ]
+  }
+
+  getProjetosUsuario(): void {
+    // http get
+    this.projetosAtuais = [
+      {codigo: 1, identificador: 'X', idequipe: 1, idprojeto: 1, idstatus: 1, nome: 'Projeto 01'},
+      {codigo: 1, identificador: 'Y', idequipe: 2, idprojeto: 2, idstatus: 1, nome: 'Projeto 02'},
+      {codigo: 1, identificador: 'Z', idequipe: 3, idprojeto: 3, idstatus: 1, nome: 'Projeto 03'}
+    ]
+  }
+
+  // Desmarca uma equipe seleciona através de redirecionamento
+  desmarcarEquipe() {
+    this.equipeParam = null;
+    this.disableSelectEquipe = false;
+    this.getProjetosUsuario();
   }
 }

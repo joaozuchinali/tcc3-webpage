@@ -4,7 +4,7 @@
         <h5 [ngClass]="{'text-primary': focus, 'border border-top-0 border-end-0 border-start-0 border-bottom-3 border-primary': focus }" 
             (click)="verProjeto()"
             style="cursor: pointer;" (mouseleave)="changeFocus(false)" (mouseover)="changeFocus(true)">
-            {{nome}}
+            {{projeto.nome}}
         </h5>
 
         <div class="fs-5 d-flex align-items-center justify-content-center text-white rounded" 

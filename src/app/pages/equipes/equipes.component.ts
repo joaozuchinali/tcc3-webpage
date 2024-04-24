@@ -3,6 +3,7 @@ import { AddEquipeService } from '../../utils/add-equipe.service';
 import { CurrentUserService } from '../../utils/current-user.service';
 import { Equipe } from '../../interfaces/equipe';
 import { Equipeuso } from '../../interfaces/equipeuso';
+import { Equipesget } from '../../interfaces/equipesget';
 
 @Component({
   selector: 'app-equipes',
@@ -13,6 +14,8 @@ export class EquipesComponent implements OnInit{
   adicionandoEquipe: boolean = false;
   nomeEquipe: string = '';
 
+  equipes: Equipe[] = []
+
   constructor(
     private addequipe: AddEquipeService,
     private currentUser: CurrentUserService
@@ -22,6 +25,7 @@ export class EquipesComponent implements OnInit{
 
   ngOnInit(): void {
     this.addEquipesEventWatcher();
+    this.getEquipes();
   }
 
   addEquipesEventWatcher() {
@@ -31,7 +35,7 @@ export class EquipesComponent implements OnInit{
   }
 
   adicionarEquipe() {
-    console.log(this.nomeEquipe);
+    // console.log(this.nomeEquipe);
 
     if(this.nomeEquipe.trim() != '') {
       const newEquipe: Equipe = {nome: this.nomeEquipe, idstatus: -1, idequipe: -1}
@@ -52,7 +56,7 @@ export class EquipesComponent implements OnInit{
     const usuario = this.currentUser.getUser();
 
     const equipeUso: Equipeuso = { 
-      idcredencial: 1, 
+      idcredencial: 2, 
       idequipe: equipeCriada.idequipe, 
       idusuario: usuario.idusuario
     }
@@ -76,5 +80,20 @@ export class EquipesComponent implements OnInit{
   cancelarAdd() {
     this.nomeEquipe = '';
     this.adicionandoEquipe = false;
+  }
+
+  // Retorna as equipes do ERP
+  getEquipes(): void {
+    const user = this.currentUser.getUser();
+    const queryinfo: Equipesget = {
+      idstatus: 1,
+      idusuario: user.idusuario
+    };
+    // http get
+    this.equipes = [
+      {idequipe: 1, idstatus: 1, nome: 'Equipes 1'},
+      {idequipe: 2, idstatus: 2, nome: 'Equipes 2'},
+      {idequipe: 3, idstatus: 3, nome: 'Equipes 3'}
+    ];
   }
 }

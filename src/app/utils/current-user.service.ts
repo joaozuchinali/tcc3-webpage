@@ -33,7 +33,11 @@ export class CurrentUserService {
   public getUser() {
     if(this.current.idusuario == -1) {
       const saved = this.getLocal();
-      this.setUser(saved, true);
+      if(saved) {
+        this.setUser(saved, true);
+      } else {
+        this.current = {email: '', idstatus: 0, nome: '', senha: '', idusuario: -1};
+      }
     }
     
     return this.current;

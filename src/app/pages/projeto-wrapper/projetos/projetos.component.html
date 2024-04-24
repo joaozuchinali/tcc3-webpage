@@ -1,9 +1,12 @@
 <div class="container-fluid align-self-stretch p-0" >
     <!-- Título da página -->
-    <div class="row border-bottom border-black sticky-top bg-white" style="height: 48px;">
+    <div class="d-flex flex-row align-items-center border-bottom border-black sticky-top bg-white" style="height: 48px;">
         <h4>
             Manutenção de Projetos
         </h4>
+        <button *ngIf="equipeParam != null" class="btn btn-primary btn-sm ms-3" (click)="desmarcarEquipe()" style="width: 180px;">
+            Desmarcar equipe
+        </button>
     </div>
 
     <!-- Opção de adicionar novo projeto -->
@@ -36,7 +39,9 @@
                         <b>Equipe do projeto:</b>
                     </label>
                     
-                    <select class="form-control form-control-sm w-100" id="equipe-projeto" [(ngModel)]="idequipe" [disabled]="disableSelectEquipe">
+                    <select class="form-control form-control-sm w-100" id="equipe-projeto" 
+                            [(ngModel)]="idequipe" [disabled]="disableSelectEquipe"
+                            (change)="verificaCredencialEquipe()">
                         <option *ngFor="let item of equipesSelect" [value]="item.idequipe">
                             {{item.nome}}
                         </option>
@@ -47,9 +52,14 @@
         </div>
 
         <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center p-0">
-            <button class="btn btn-success btn-sm" (click)="adicionarProjeto()">
+            <!-- Controle de visibilidade para adição do projeto -->
+            <button class="btn btn-success btn-sm" (click)="adicionarProjeto()" *ngIf="!disableCreateProjeto">
                 <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
                 <span>Adicionar projeto</span>
+            </button>
+            <button class="btn btn-danger btn-sm" *ngIf="disableCreateProjeto">
+                <fa-icon [icon]="['fas', 'minus']" class="me-2"></fa-icon>
+                <span>Não autorizado a adicionar projetos</span>
             </button>
 
             <button class="btn btn-danger btn-sm" (click)="cancelarProjeto()">
@@ -62,7 +72,7 @@
     <!-- Listagem dos projetos -->
     <div class="row p-1 mb-2 mt-2">
         <div class="col-md-12 p-0">
-            <app-item-projeto [nome]="'Projeto X'"></app-item-projeto>
+            <app-item-projeto *ngFor="let projeto of projetosAtuais" [projeto]="projeto"></app-item-projeto>
         </div>
     </div>
 </div>

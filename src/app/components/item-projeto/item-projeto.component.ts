@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Projeto } from '../../interfaces/projeto';
 
 @Component({
   selector: 'app-item-projeto',
@@ -7,7 +8,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './item-projeto.component.scss'
 })
 export class ItemProjetoComponent {
-  @Input('nome') nome: string = '';
+  @Input('projeto') projeto: Projeto = {codigo: -1, identificador: '', idequipe: -1, idprojeto: -1, idstatus: -1, nome: ''}
+
   editProjeto: boolean = false;
   focus: boolean = false;
 

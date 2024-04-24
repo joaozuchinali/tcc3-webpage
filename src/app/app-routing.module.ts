@@ -9,16 +9,25 @@ import { PerfilComponent } from './pages/perfil/perfil.component';
 import { EquipesComponent } from './pages/equipes/equipes.component';
 import { ProjetoComponent } from './pages/projeto-wrapper/projeto/projeto.component';
 import { ProjetoWrapperComponent } from './pages/projeto-wrapper/projeto-wrapper.component';
+import { ClearEquipeService } from './utils/clear-equipe.service';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-  { path: 'login', component: LoginComponent },
+  { 
+    path: 'login', component: LoginComponent,
+    resolve: {
+      clearedEquipe: ClearEquipeService
+    }
+  },
   { 
     path: 'main', 
     component: MainComponent,
     children: [
       { 
-        path: 'equipes', component: EquipesComponent
+        path: 'equipes', component: EquipesComponent,
+        resolve: {
+          clearedEquipe: ClearEquipeService
+        }
       },
       { 
         path: 'projetos', component: ProjetoWrapperComponent,
@@ -27,7 +36,13 @@ const routes: Routes = [
           { path: ':identificador', component: ProjetoComponent}
         ]
       },
-      { path: 'perfil', component: PerfilComponent },
+      { 
+        path: 'perfil', 
+        component: PerfilComponent,
+        resolve: {
+          clearedEquipe: ClearEquipeService
+        }
+      },
       { path: '', redirectTo: 'equipes', pathMatch: "full"}
     ] 
   },

@@ -4,12 +4,11 @@
         <h5 [ngClass]="{'text-primary': focus, 'border border-top-0 border-end-0 border-start-0 border-bottom-3 border-primary': focus }" 
             (click)="verProjetos()"
             style="cursor: pointer;" (mouseleave)="changeFocus(false)" (mouseover)="changeFocus(true)">
-            {{nome}}
+            {{equipe.nome}}
         </h5>
 
-        <div class="fs-5 d-flex align-items-center justify-content-center text-white rounded" 
-             style="cursor: pointer; width: 32px;" (click)="edit()"
-             [ngClass]="{'bg-primary': !editEquipe, 'bg-danger': editEquipe}">
+        <div class="fs-6 d-flex align-items-center justify-content-center text-white rounded bg-primary" 
+             style="cursor: pointer; width: 24px;" (click)="edit()">
             <fa-icon [icon]="['fas', 'gear']"  *ngIf="!editEquipe"></fa-icon>
             <fa-icon [icon]="['fas', 'minus']" *ngIf="editEquipe"></fa-icon>
         </div>
@@ -21,16 +20,18 @@
                 <label style="font-size: 12px;" for="nome-equipe">
                     <b>Nome da Equipe:</b>
                 </label>
-                <input class="form-control form-control-sm w-50" id="nome-equipe">
+                <input class="form-control form-control-sm w-50" id="nome-equipe" [(ngModel)]="equipe.nome">
             </div>
 
             <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center">
-                <button class="btn btn-success btn-sm">
-                    Atualizar
+                <button class="btn btn-success btn-sm" (click)="updateEquipe()">
+                    <fa-icon [icon]="['fas', 'refresh']" class="me-2"></fa-icon>
+                    <span>Atualizar</span>
                 </button>
 
-                <button class="btn btn-danger btn-sm">
-                    Excluir
+                <button class="btn btn-danger btn-sm" (click)="deleteEquipe()">
+                    <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
+                    <span>Excluir</span>
                 </button>
             </div>
         </div>
@@ -48,15 +49,26 @@
                     <input class="form-control form-control-sm" id="email-request-equipe">
                 </div>
                 <button class="btn btn-primary btn-sm ms-2">
-                    Adicionar
+                    <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
+                    <span>Adicionar</span>
                 </button>
             </div>
             
             <div class="d-flex flex-column align-items-stretch mt-2">
-                <div class="bg-body-secondary p-1 pe-2 border border-start-0 border-bottom-0 border-end-0 border-top-2 border-black d-flex flex-row align-items-center justify-content-between">
-                    <span style="font-size: 13.5px;">User X</span>
-                    <div class="fs-5 text-danger bg-danger rounded text-white d-flex align-items-center justify-content-center" style="cursor: pointer; width: 32px;">
-                        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                <div *ngIf="users.length == 0" 
+                     class="bg-body-secondary p-1 pe-2 border border-start-0 border-bottom-0 border-end-0 border-top-2 border-black d-flex flex-row align-items-center justify-content-between">
+                    <span style="font-size: 13.5px;">{{fallbacktext}}</span>
+                </div>
+
+                <div *ngIf="users.length > 0" class="d-flex flex-column align-items-stretch mt-1">
+                    <div *ngFor="let user of users"
+                         class="bg-body-tertiary p-2 pe-2 mb-2 shadow-sm rounded d-flex flex-row align-items-center justify-content-between">
+                        <span style="font-size: 13.5px;">{{user.nome}} - {{user.email}}</span>
+                        <div class="fs-6 text-danger bg-danger rounded text-white d-flex align-items-center justify-content-center" 
+                             style="cursor: pointer; width: 24px;"
+                             (click)="removeUser(user)">
+                            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                        </div>
                     </div>
                 </div>
             </div>
