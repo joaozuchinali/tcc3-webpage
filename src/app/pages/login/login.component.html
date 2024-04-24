@@ -13,23 +13,25 @@
 
                     <div class="form-group">
                         <label style="font-size: 12px;" for="usermail-log"><b>E-mail:</b></label>
-                        <input class="form-control form-control-sm" id="usermail-log">
+                        <input class="form-control form-control-sm" id="usermail-log" type="email" [(ngModel)]="emailLogin">
                     </div>
 
                     <div class="form-group">
                         <label style="font-size: 12px;" for="userpassword-log"><b>Senha:</b></label>
-                        <input class="form-control form-control-sm" id="userpassword-log" type="password">
+                        <input class="form-control form-control-sm" id="userpassword-log" type="password" [(ngModel)]="senhaLogin">
                     </div>
 
                     <div class="d-grid gap-2 mt-3">
                         <button class="btn btn-success btn-sm" (click)="login()">
-                            Entrar
+                            <fa-icon [icon]="['fas', 'door-open']" class="me-2"></fa-icon>
+                            <span>Entrar</span>
                         </button>
                     </div>
 
                     <div class="d-grid gap-2 mt-3">
-                        <button class="btn btn-outline-primary btn-sm" (click)="changecard()">
-                            Criar conta
+                        <button class="btn btn-outline-primary btn-sm" (click)="changeCard()">
+                            <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
+                            <span>Criar conta</span>
                         </button>
                     </div>
                 </div>
@@ -49,33 +51,34 @@
 
                     <div class="form-group">
                         <label style="font-size: 12px;" for="username-reg"><b>Nome:</b></label>
-                        <input class="form-control form-control-sm" id="username-reg">
+                        <input class="form-control form-control-sm" id="username-reg" [(ngModel)]="nomeCreate">
                     </div>
 
                     <div class="form-group">
                         <label style="font-size: 12px;" for="usermail-reg"><b>E-mail:</b></label>
-                        <input class="form-control form-control-sm" id="usermail-reg">
+                        <input class="form-control form-control-sm" id="usermail-reg" [(ngModel)]="emailCreate">
                     </div>
 
                     <div class="form-group">
                         <label style="font-size: 12px;" for="userpassword-reg"><b>Senha:</b></label>
-                        <input class="form-control form-control-sm" id="userpassword-reg" type="password">
+                        <input class="form-control form-control-sm" id="userpassword-reg" type="password" [(ngModel)]="senhaCreate">
                     </div>
 
                     <div class="d-grid gap-2 mt-3">
                         <button class="btn btn-success btn-sm" (click)="cadastrar()">
-                            Cadastrar
+                            <fa-icon [icon]="['fas', 'user-plus']" class="me-2"></fa-icon>
+                            <span>Cadastrar</span>
                         </button>
                     </div>
 
                     <div class="d-grid gap-2 mt-3">
-                        <button class="btn btn-outline-primary btn-sm" (click)="changecard()">
-                            Voltar
+                        <button class="btn btn-outline-primary btn-sm" (click)="changeCard()">
+                            <fa-icon [icon]="['fas', 'right-from-bracket']" class="me-2"></fa-icon>
+                            <span>Voltar</span>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>

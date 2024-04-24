@@ -3,6 +3,15 @@
 
         <div class="col-md-2 h-100 p-1 bg-light d-flex justify-content-center align-items-center">
             <div class="card d-flex justify-content-center main-cards">
+                <div class="mb-1 ps-3 default-item-menu d-flex align-items-center border border-start-0 border-end-0 border-top-0 border-primary text-primary">
+                    <div class="me-2">
+                        <fa-icon [icon]="['fas', 'user']"></fa-icon>
+                    </div>
+                    <span>
+                        {{email}}
+                    </span>
+                </div>
+
                 <div class="card-body" style="padding: 0px;">
                     <app-item-menu *ngFor="let item of menuitens" [item]="item">
                     </app-item-menu>
@@ -11,7 +20,7 @@
         </div>
     
         <div class="col-md-10 h-100 p-1 bg-light d-flex justify-content-center align-items-center">
-            <div class="card main-cards overflow-y-scroll">
+            <div class="card main-cards overflow-y-scroll hidden-scroll">
                 <div class="card-body">
                     <router-outlet></router-outlet>
                 </div>

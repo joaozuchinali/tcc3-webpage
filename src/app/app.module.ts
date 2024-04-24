@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { DigitOnlyModule } from '@uiowa/digit-only';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,10 +36,11 @@ import { ItemProjetoComponent } from './components/item-projeto/item-projeto.com
     ItemProjetoComponent
   ],
   imports: [
-    AppRoutingModule,
     BrowserModule,
+    AppRoutingModule,
     FormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    DigitOnlyModule 
   ],
   providers: [],
   bootstrap: [AppComponent]

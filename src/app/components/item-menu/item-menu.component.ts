@@ -9,7 +9,7 @@ import { filter } from 'rxjs';
   styleUrl: './item-menu.component.scss'
 })
 export class ItemMenuComponent implements OnInit {
-  @Input('item') item: MenuItens = {nome: '.', isfocus: false, page: ''};
+  @Input('item') item: MenuItens = {nome: '.', isfocus: false, page: '', icon: ['fas', 'square']};
 
   constructor(
     private router: Router,
