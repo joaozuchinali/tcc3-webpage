@@ -2,26 +2,35 @@
 
     <div class="d-flex flex-row align-items-center justify-content-between">
         <h5 [ngClass]="{'text-primary': focus, 'border border-top-0 border-end-0 border-start-0 border-bottom-3 border-primary': focus }" 
-            (click)="verProjetos()"
+            (click)="verProjeto()"
             style="cursor: pointer;" (mouseleave)="changeFocus(false)" (mouseover)="changeFocus(true)">
             {{nome}}
         </h5>
 
         <div class="fs-5 d-flex align-items-center justify-content-center text-white rounded" 
              style="cursor: pointer; width: 32px;" (click)="edit()"
-             [ngClass]="{'bg-primary': !editEquipe, 'bg-danger': editEquipe}">
-            <fa-icon [icon]="['fas', 'gear']"  *ngIf="!editEquipe"></fa-icon>
-            <fa-icon [icon]="['fas', 'minus']" *ngIf="editEquipe"></fa-icon>
+             [ngClass]="{'bg-primary': !editProjeto, 'bg-danger': editProjeto}">
+            <fa-icon [icon]="['fas', 'gear']"  *ngIf="!editProjeto"></fa-icon>
+            <fa-icon [icon]="['fas', 'minus']" *ngIf="editProjeto"></fa-icon>
         </div>
     </div>
 
-    <div class="d-flex flex-column align-items-stretch" *ngIf="editEquipe">
+    <div class="d-flex flex-column align-items-stretch" *ngIf="editProjeto">
         <div class="d-flex flex-column align-items-stretch">
-            <div class="form-group">
-                <label style="font-size: 12px;" for="nome-equipe">
-                    <b>Nome da Equipe:</b>
-                </label>
-                <input class="form-control form-control-sm w-50" id="nome-equipe">
+            <div class="d-flex flex-row">
+                <div class="form-group w-25 me-2">
+                    <label style="font-size: 12px;" for="nome-projeto">
+                        <b>Nome do Projeto:</b>
+                    </label>
+                    <input class="form-control form-control-sm w-100" id="nome-projeto">
+                </div>
+    
+                <div class="form-group w-25 me-2">
+                    <label style="font-size: 12px;" for="codigo-acesso">
+                        <b>Código de acesso:</b>
+                    </label>
+                    <input class="form-control form-control-sm w-100" id="codigo-acesso" type="password">
+                </div>
             </div>
 
             <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center">
@@ -41,11 +50,11 @@
 
             <div class="d-flex flex-row align-items-end">
                 <div class="form-group">
-                    <label style="font-size: 12px;" for="email-request-equipe">
-                        Adicionar participante ao projeto:
+                    <label style="font-size: 12px;" for="request-equipe">
+                        Adicionar equipe ao projeto:
                     </label>
                     
-                    <input class="form-control form-control-sm" id="email-request-equipe">
+                    <input class="form-control form-control-sm" id="request-equipe">
                 </div>
                 <button class="btn btn-primary btn-sm ms-2">
                     Adicionar
@@ -54,12 +63,13 @@
             
             <div class="d-flex flex-column align-items-stretch mt-2">
                 <div class="bg-body-secondary p-1 pe-2 border border-start-0 border-bottom-0 border-end-0 border-top-2 border-black d-flex flex-row align-items-center justify-content-between">
-                    <span style="font-size: 13.5px;">User X</span>
+                    <span style="font-size: 13.5px;">Equipe X</span>
                     <div class="fs-5 text-danger bg-danger rounded text-white d-flex align-items-center justify-content-center" style="cursor: pointer; width: 32px;">
                         <fa-icon [icon]="['fas', 'times']"></fa-icon>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

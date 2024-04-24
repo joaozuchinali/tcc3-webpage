@@ -1,7 +1,7 @@
 <div class="container-fluid h-100 w-100 bg-light d-flex justify-content-center">
     <div class="row h-100 w-100">
 
-        <div class="col-md-2 h-100 bg-light d-flex justify-content-center align-items-center">
+        <div class="col-md-2 h-100 p-1 bg-light d-flex justify-content-center align-items-center">
             <div class="card d-flex justify-content-center main-cards">
                 <div class="card-body" style="padding: 0px;">
                     <app-item-menu *ngFor="let item of menuitens" [item]="item">
@@ -10,7 +10,7 @@
             </div>
         </div>
     
-        <div class="col-md-10 h-100 bg-light d-flex justify-content-center align-items-center">
+        <div class="col-md-10 h-100 p-1 bg-light d-flex justify-content-center align-items-center">
             <div class="card main-cards overflow-y-scroll">
                 <div class="card-body">
                     <router-outlet></router-outlet>

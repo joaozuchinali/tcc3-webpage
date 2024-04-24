@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AddEquipeService } from '../utils/add-equipe.service';
+import { AddEquipeService } from '../../utils/add-equipe.service';
 
 @Component({
   selector: 'app-equipes',
@@ -21,7 +21,6 @@ export class EquipesComponent implements OnInit{
 
   addEquipes() {
     const subs = this.addequipe.addEquipe.subscribe((value) => {
-      console.log('add equipes');
       this.adicionandoEquipe = true;
     });
   }

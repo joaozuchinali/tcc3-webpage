@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { LoginComponent } from './login/login.component';
-import { MainComponent } from './main/main.component';
-import { NotFoundComponent } from './not-found/not-found.component';
-import { ProjetosComponent } from './projetos/projetos.component';
-import { PerfilComponent } from './perfil/perfil.component';
-import { EquipesComponent } from './equipes/equipes.component';
-import { ProjetoComponent } from './projetos/projeto/projeto.component';
+import { LoginComponent } from './pages/login/login.component';
+import { MainComponent } from './pages/main/main.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { ProjetosComponent } from './pages/projeto-wrapper/projetos/projetos.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
+import { EquipesComponent } from './pages/equipes/equipes.component';
+import { ProjetoComponent } from './pages/projeto-wrapper/projeto/projeto.component';
+import { ProjetoWrapperComponent } from './pages/projeto-wrapper/projeto-wrapper.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -17,14 +18,13 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       { 
-        path: 'equipes', component: EquipesComponent, 
+        path: 'equipes', component: EquipesComponent
+      },
+      { 
+        path: 'projetos', component: ProjetoWrapperComponent,
         children: [
-          { 
-            path: 'projetos', component: ProjetosComponent,
-            children: [
-              { path: ':identificador', component: ProjetoComponent}
-            ]
-          }
+          { path: '', component: ProjetosComponent},
+          { path: ':identificador', component: ProjetoComponent}
         ]
       },
       { path: 'perfil', component: PerfilComponent },

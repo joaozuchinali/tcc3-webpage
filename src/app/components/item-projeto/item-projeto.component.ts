@@ -2,13 +2,13 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-item-equipe',
-  templateUrl: './item-equipe.component.html',
-  styleUrl: './item-equipe.component.scss'
+  selector: 'app-item-projeto',
+  templateUrl: './item-projeto.component.html',
+  styleUrl: './item-projeto.component.scss'
 })
-export class ItemEquipeComponent {
+export class ItemProjetoComponent {
   @Input('nome') nome: string = '';
-  editEquipe: boolean = false;
+  editProjeto: boolean = false;
   focus: boolean = false;
 
   constructor(
@@ -19,14 +19,14 @@ export class ItemEquipeComponent {
   }
 
   edit() {
-    this.editEquipe = !this.editEquipe;
+    this.editProjeto = !this.editProjeto;
   }
 
   changeFocus(val: boolean) {
     this.focus = val
   }
 
-  verProjetos() {
-    this.router.navigate([`../projetos`], { relativeTo: this.route});
+  verProjeto() {
+    this.router.navigate([`../projeto`], { relativeTo: this.route});
   }
 }
