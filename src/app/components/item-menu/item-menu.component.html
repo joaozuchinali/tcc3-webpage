@@ -9,8 +9,11 @@
     (click)="navigate(item.page)" 
     (mouseenter)="item.isfocus = true" 
     (mouseleave)="item.isfocus = false"
->
-    <span >
+>   
+    <div class="me-2">
+        <fa-icon [icon]="[item.icon[0], item.icon[1]]"></fa-icon>
+    </div>
+    <span>
         {{item.nome}}
     </span>
 </div>
