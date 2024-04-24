@@ -1,0 +1,60 @@
+<div class="container-fluid align-self-stretch p-0" >
+    <!-- Título da página -->
+    <div class="row border-bottom border-black sticky-top bg-white" style="height: 48px;">
+        <h3>
+            Projetos
+        </h3>
+    </div>
+
+    <!-- Opção de adicionar novo projeto -->
+    <div class="row p-1 mb-2 mt-2" *ngIf="adicionandoProjeto == false">
+        <div class="col-md-12 p-0" style="height: 180px;">
+            <app-create-area [exec]="2" [text]="'Adicionar Projeto'"></app-create-area>
+        </div>
+    </div>
+
+    <!-- Criação de um novo projeto -->
+    <div class="row p-1 mb-2 mt-2" *ngIf="adicionandoProjeto == true">
+        <div class="col-md-12 p-0">
+            <div class="d-flex flex-row w-100">
+                <div class="form-group w-25 me-2">
+                    <label style="font-size: 12px;" for="nome-projeto">
+                        <b>Nome do Projeto:</b>
+                    </label>
+                    <input class="form-control form-control-sm w-100" id="nome-projeto">
+                </div>
+    
+                <div class="form-group w-25 me-2">
+                    <label style="font-size: 12px;" for="codigo-acesso">
+                        <b>Código de acesso:</b>
+                    </label>
+                    <input class="form-control form-control-sm w-100" id="codigo-acesso" type="password">
+                </div>
+
+                <div class="form-group w-25 me-2">
+                    <label style="font-size: 12px;" for="equipe-projeto">
+                        <b>Equipe do projeto:</b>
+                    </label>
+                    <select class="form-control form-control-sm w-100" id="equipe-projeto" type="password"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center p-0">
+            <button class="btn btn-success btn-sm">
+                Adicionar projeto
+            </button>
+
+            <button class="btn btn-danger btn-sm" (click)="cancelarProjeto()">
+                Retornar
+            </button>
+        </div>
+    </div>
+
+    <!-- Listagem dos projetos -->
+    <div class="row p-1 mb-2 mt-2">
+        <div class="col-md-12 p-0">
+            <app-item-projeto [nome]="'Projeto X'"></app-item-projeto>
+        </div>
+    </div> 
+</div>

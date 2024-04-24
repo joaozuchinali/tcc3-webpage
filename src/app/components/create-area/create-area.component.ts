@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AddEquipeService } from '../../utils/add-equipe.service';
+import { AddProjetoService } from '../../utils/add-projeto.service';
 
 @Component({
   selector: 'app-create-area',
@@ -11,12 +12,17 @@ export class CreateAreaComponent {
   @Input('text') text: string = '';
 
   constructor(
-    private addequipe: AddEquipeService
+    private equipe: AddEquipeService,
+    private projeto: AddProjetoService
   ) { }
 
   showForm() {
     if(this.exec == 1) {
-      this.addequipe.addEquipe.next(true);
+      this.equipe.addEquipe.next(true);
+    }
+
+    if(this.exec == 2) {
+      this.projeto.addProjeto.next(true);
     }
   }
 }
