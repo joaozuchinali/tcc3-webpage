@@ -20,17 +20,19 @@
                 <label style="font-size: 12px;" for="nome-equipe">
                     <b>Nome da Equipe:</b>
                 </label>
-                <input class="form-control form-control-sm w-50" id="nome-equipe">
+                <input class="form-control form-control-sm w-50" id="nome-equipe" [(ngModel)]="nomeEquipe">
             </div>
         </div>
 
         <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center p-0">
-            <button class="btn btn-success btn-sm">
-                Adicionar equipe
+            <button class="btn btn-success btn-sm" (click)="adicionarEquipe()">
+                <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
+                <span>Adicionar equipe</span>
             </button>
 
-            <button class="btn btn-danger btn-sm" (click)="cancelarEquipe()">
-                Retornar
+            <button class="btn btn-danger btn-sm" (click)="cancelarAdd()">
+                <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
+                <span>Retornar</span>
             </button>
         </div>
     </div>

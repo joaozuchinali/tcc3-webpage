@@ -33,8 +33,6 @@ export class MainComponent implements OnInit{
 
   getUser(): void {
     const val = this.currentUser.getUser();
-    if(val != false) {
-      this.email = val.email;
-    }
+    this.email = val.email;
   }
 }

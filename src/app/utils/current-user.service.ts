@@ -7,7 +7,7 @@ import { LocalStorageService, LocalStorage } from 'angular-web-storage';
 })
 export class CurrentUserService {
 
-  private current: User | false = false;
+  private current: User = {email: '', idstatus: 0, nome: '', senha: '', idusuario: -1};
   private key = 'current-user';
   
   constructor(
@@ -31,7 +31,7 @@ export class CurrentUserService {
 
   // Retorna o usuário e atualzia em caso de refresh
   public getUser() {
-    if(this.current == false || this.current == undefined) {
+    if(this.current.idusuario == -1) {
       const saved = this.getLocal();
       this.setUser(saved, true);
     }

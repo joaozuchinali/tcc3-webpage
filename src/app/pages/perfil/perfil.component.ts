@@ -9,6 +9,10 @@ import { CurrentUserService } from '../../utils/current-user.service';
 })
 export class PerfilComponent implements OnInit {
   
+  nome: string = '';
+  senha: string = '';
+  email: string = '';
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -16,14 +20,43 @@ export class PerfilComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.fillCampos();
   }
 
+  // Preenche os campos com os dados atuais do usuário
+  fillCampos(): void {
+    const user = this.currentUser.getUser();
+    this.nome  = user.nome;
+    this.senha = user.senha;
+    this.email = user.email;
+  }
+
+  // Atualiza o registro do usuário
   atualizar(): void {
-    console.log('Atualizando usuário...');
+    if(this.senha.trim() == '')
+      return;
+  
+    if(this.nome.trim() == '')
+      return;
+
+    if(this.email.trim() == '')
+      return;
+
+    this.updateUser();
   }
 
+  updateUser() {
+    const user = this.currentUser.getUser();
+    user.email = this.email;
+    user.senha = this.senha;
+    user.nome  = this.nome;
+
+    // html post
+    console.log(user);
+  }
+
+  // deleta o registro do usuário
   deletar(): void {
     console.log('Deletando usuário...')
   }
-
 }
