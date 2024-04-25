@@ -20,6 +20,9 @@ import { ProjetoWrapperComponent } from './pages/projeto-wrapper/projeto-wrapper
 import { ItemProjetoComponent } from './components/item-projeto/item-projeto.component';
 import { DialogcompComponent } from './components/dialogcomp/dialogcomp.component';
 import { BlockedComponent } from './pages/blocked/blocked.component';
+import { DominiosProjetoComponent } from './components/project/dominios-projeto/dominios-projeto.component';
+import { TempoProjetoComponent } from './components/project/tempo-projeto/tempo-projeto.component';
+import { NgApexchartsModule } from "ng-apexcharts";
 
 @NgModule({
   declarations: [
@@ -37,14 +40,17 @@ import { BlockedComponent } from './pages/blocked/blocked.component';
     ProjetoWrapperComponent,
     ItemProjetoComponent,
     DialogcompComponent,
-    BlockedComponent
+    BlockedComponent,
+    DominiosProjetoComponent,
+    TempoProjetoComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     FontAwesomeModule,
-    DigitOnlyModule
+    DigitOnlyModule,
+    NgApexchartsModule
   ],
   providers: [
   ],

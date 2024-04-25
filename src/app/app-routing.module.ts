@@ -12,6 +12,10 @@ import { ProjetoWrapperComponent } from './pages/projeto-wrapper/projeto-wrapper
 import { ClearEquipeService } from './utils/clear-equipe.service';
 import { BlockedComponent } from './pages/blocked/blocked.component';
 import { ClearProjetoService } from './utils/clear-projeto.service';
+import { VisaoProjetoComponent } from './components/project/visao-projeto/visao-projeto.component';
+import { UsuariosProjetoComponent } from './components/project/usuarios-projeto/usuarios-projeto.component';
+import { DominiosProjetoComponent } from './components/project/dominios-projeto/dominios-projeto.component';
+import { TempoProjetoComponent } from './components/project/tempo-projeto/tempo-projeto.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -37,7 +41,16 @@ const routes: Routes = [
         path: 'projetos', component: ProjetoWrapperComponent,
         children: [
           { path: '', component: ProjetosComponent},
-          { path: ':identificador', component: ProjetoComponent}
+          { 
+            path: ':identificador', 
+            component: ProjetoComponent,
+            children: [
+              { path: 'visao-geral', component: VisaoProjetoComponent },
+              { path: 'usuarios-pesquisados', component: UsuariosProjetoComponent },
+              { path: 'dominios', component: DominiosProjetoComponent },
+              { path: 'tempo', component: TempoProjetoComponent }
+            ]
+          }
         ],
         resolve: {
           clearedProjeto: ClearProjetoService

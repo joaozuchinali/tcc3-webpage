@@ -23,9 +23,12 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@types/humanize-duration": "^3.27.4",
     "@uiowa/digit-only": "^3.2.1",
     "angular-web-storage": "^17.0.0",
     "bootstrap": "^5.3.3",
+    "humanize-duration": "^3.32.0",
+    "ng-apexcharts": "^1.10.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

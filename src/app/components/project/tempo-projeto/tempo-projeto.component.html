@@ -1,0 +1,78 @@
+
+<div class="container-fluid">
+    <div class="row md-12">
+        <div class="col md-12">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div>
+                        <span class="fs-5">Total: </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div>
+                        <span class="fs-6"><b>Domínios por tempo:</b> </span>
+                    </div>
+                    <apx-chart
+                        [series]="chartOptions.series!"
+                        [chart]="chartOptions.chart!"
+                        [dataLabels]="chartOptions.dataLabels!"
+                        [plotOptions]="chartOptions.plotOptions!"
+                        [xaxis]="chartOptions.xaxis!"
+                    ></apx-chart>
+                    <!-- gráfico de barras por domínio no y e tempo pesquisado no x -->
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div>
+                        <span class="fs-6"><b>Tempo de pesquisa por dia:</b> </span>
+                    </div>
+
+                    <div class="d-flex flex-row">
+                        <div class="form-group w-25 me-2">
+                            <label style="font-size: 12px;" for="data-inicial">
+                                <b>Data Inicial:</b>
+                            </label>
+                            <input class="form-control form-control-sm w-100" type="date" id="data-inicial" [(ngModel)]="dataFinal">
+                        </div>
+
+                        <div class="form-group w-25 me-2">
+                            <label style="font-size: 12px;" for="data-final">
+                                <b>Data Final:</b>
+                            </label>
+                            <input class="form-control form-control-sm w-100" type="date" id="data-final" [(ngModel)]="dataFinal">
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex flex-column w-100">
+                        <div class="card mt-2" *ngFor="let item of listaDiasTempo">
+                            <div class="card-body">
+                                <div class="d-flex flex-row">
+                                    <span class="ps-1 pe-3">
+                                        {{item.data}}
+                                    </span>
+                                    <span class="text-danger pe-3">
+                                        {{item.dia}}
+                                    </span>
+                                    <span class="pe-3">
+                                        Pesquisas no dia: {{item.pesquisas}}
+                                    </span>
+                                    <span class="pe-3">
+                                        Usuários no dia: {{item.usuarios}}
+                                    </span>
+                                    <span class="">
+                                        Total: {{conversor.msToTime(item.total)}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

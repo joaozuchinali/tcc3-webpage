@@ -1,0 +1,75 @@
+
+<div class="container-fluid">
+    <div class="row md-12">
+        <div class="col md-12">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div class="mb-2">
+                        <span class="fs-5">Domínios pesquisados: </span>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div>
+                        <span class="fs-6"><b>Lista de domínios pesquisados:</b> </span>
+                    </div>
+
+                    <div class="d-flex flex-row">
+                        <div class="form-group w-25 me-2">
+                            <label style="font-size: 12px;" for="ordencao">
+                                <b>Ordenação:</b>
+                            </label>
+                            <select class="form-control form-control-sm w-100" id="ordencao" [(ngModel)]="ordencao">
+                                <option value="1">Maior tempo de navegação</option>
+                                <option value="2">Maior quantidade de pesquisa</option>
+                                <option value="3">Menor tempo de navegação</option>
+                                <option value="4">Menor quantidade de pesquisas</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group w-25 me-2">
+                            <label style="font-size: 12px;" for="nr-limite">
+                                <b>Limite:</b>
+                            </label>
+                            <input class="form-control form-control-sm w-100" type="number" digitOnly id="nr-limite" [(ngModel)]="limite">
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column w-100">
+                        <div class="card mt-2" *ngFor="let item of dominiosList" (click)="changeCard(item)" style="cursor: pointer;">
+                            <div class="card-body" >
+                                <div class="d-flex flex-row">
+                                    <span class="pe-2" *ngIf="item.full == false">
+                                        <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
+                                    </span>
+                                    <span class="pe-2" *ngIf="item.full == true">
+                                        <fa-icon [icon]="['fas', 'minus']" class="me-2"></fa-icon>
+                                    </span>
+                                    <span class="ps-1">
+                                        {{item.nome}}
+                                    </span>
+                                </div>  
+                                <div class="d-flex flex-column mt-2" *ngIf="item.full == true">
+                                    <span>
+                                        Pesquisas: {{item.pesquisas}}
+                                    </span>
+
+                                    <span>
+                                        Tempo: {{conversor.msToTime(item.tempo)}}
+                                    </span>
+
+                                    <span>
+                                        Usuários: {{item.usuarios}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--  -->
