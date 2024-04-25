@@ -1,0 +1,19 @@
+<div class="modal fade bg-black bg-opacity-10" id="exampleModal" tabindex="-1" 
+     aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true"
+     [ngClass]="{'show': exib}" [ngStyle]="{'display': (exib ? 'block' : 'none')}"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{this.infoslocal?.title}}</h1>
+            </div>
+            <div class="modal-body">
+                {{this.infoslocal?.text}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" (click)="close()">Negar</button>
+                <button type="button" class="btn btn-success btn-sm" (click)="confirm()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,9 +7,8 @@
             {{projeto.nome}}
         </h5>
 
-        <div class="fs-5 d-flex align-items-center justify-content-center text-white rounded" 
-             style="cursor: pointer; width: 32px;" (click)="edit()"
-             [ngClass]="{'bg-primary': !editProjeto, 'bg-danger': editProjeto}">
+        <div class="fs-6 d-flex align-items-center justify-content-center text-white rounded bg-primary" 
+             style="cursor: pointer; width: 24;" (click)="edit()">
             <fa-icon [icon]="['fas', 'gear']"  *ngIf="!editProjeto"></fa-icon>
             <fa-icon [icon]="['fas', 'minus']" *ngIf="editProjeto"></fa-icon>
         </div>
@@ -64,7 +63,7 @@
             <div class="d-flex flex-column align-items-stretch mt-2">
                 <div class="bg-body-secondary p-1 pe-2 border border-start-0 border-bottom-0 border-end-0 border-top-2 border-black d-flex flex-row align-items-center justify-content-between">
                     <span style="font-size: 13.5px;">Equipe X</span>
-                    <div class="fs-5 text-danger bg-danger rounded text-white d-flex align-items-center justify-content-center" style="cursor: pointer; width: 32px;">
+                    <div class="fs-6 text-danger bg-danger rounded text-white d-flex align-items-center justify-content-center" style="cursor: pointer; width: 24px;">
                         <fa-icon [icon]="['fas', 'times']"></fa-icon>
                     </div>
                 </div>
