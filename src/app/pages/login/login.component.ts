@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit{
   }
   // Seta os valores do usuário
   configUser(infos: User): void {
-    this.currentUser.setUser(infos);
+    this.currentUser.set(infos);
     this.router.navigate(
       ['/main'], { }
     );

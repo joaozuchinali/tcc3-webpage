@@ -32,7 +32,7 @@ export class MainComponent implements OnInit{
   }
 
   getUser(): void {
-    const val = this.currentUser.getUser();
+    const val = this.currentUser.get();
     this.email = val.email;
   }
 }

@@ -39,7 +39,7 @@ export class ProjetosComponent implements OnInit{
   }
 
   async ngOnInit() {
-    const equipeFilter = this.currentEquipe.getEquipe();
+    const equipeFilter = this.currentEquipe.get();
     if(equipeFilter.idequipe != -1) {
       this.equipeParam = equipeFilter;
       this.idequipe = String(equipeFilter.idequipe);

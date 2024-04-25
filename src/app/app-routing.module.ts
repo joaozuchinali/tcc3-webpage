@@ -10,13 +10,16 @@ import { EquipesComponent } from './pages/equipes/equipes.component';
 import { ProjetoComponent } from './pages/projeto-wrapper/projeto/projeto.component';
 import { ProjetoWrapperComponent } from './pages/projeto-wrapper/projeto-wrapper.component';
 import { ClearEquipeService } from './utils/clear-equipe.service';
+import { BlockedComponent } from './pages/blocked/blocked.component';
+import { ClearProjetoService } from './utils/clear-projeto.service';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { 
     path: 'login', component: LoginComponent,
     resolve: {
-      clearedEquipe: ClearEquipeService
+      clearedEquipe: ClearEquipeService,
+      clearedProjeto: ClearProjetoService
     }
   },
   { 
@@ -26,7 +29,8 @@ const routes: Routes = [
       { 
         path: 'equipes', component: EquipesComponent,
         resolve: {
-          clearedEquipe: ClearEquipeService
+          clearedEquipe: ClearEquipeService,
+          clearedProjeto: ClearProjetoService
         }
       },
       { 
@@ -34,19 +38,24 @@ const routes: Routes = [
         children: [
           { path: '', component: ProjetosComponent},
           { path: ':identificador', component: ProjetoComponent}
-        ]
+        ],
+        resolve: {
+          clearedProjeto: ClearProjetoService
+        }
       },
       { 
         path: 'perfil', 
         component: PerfilComponent,
         resolve: {
-          clearedEquipe: ClearEquipeService
+          clearedEquipe: ClearEquipeService,
+          clearedProjeto: ClearProjetoService
         }
       },
       { path: '', redirectTo: 'equipes', pathMatch: "full"}
     ] 
   },
   { path: 'not-found', component: NotFoundComponent },
+  { path: 'blocked', component: BlockedComponent },
   { path: '**', redirectTo: '/not-found' }
 ];
 

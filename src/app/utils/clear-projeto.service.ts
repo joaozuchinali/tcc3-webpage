@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
+import { CurrentProjetoService } from './current-projeto.service';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { CurrentEquipeService } from './current-equipe.service';
 
-@Injectable({ providedIn: "root" })
-export class ClearEquipeService implements Resolve<any> {
+@Injectable({
+  providedIn: 'root'
+})
+export class ClearProjetoService implements Resolve<any> {
 
   constructor(
-    private currentEquipe: CurrentEquipeService
+    private current: CurrentProjetoService
   ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>  | Promise<boolean> | boolean {
-    this.currentEquipe.clear();
+    this.current.clear();
     return true;
   }
 }

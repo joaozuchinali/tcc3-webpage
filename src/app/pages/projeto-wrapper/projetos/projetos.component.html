@@ -1,12 +1,14 @@
 <div class="container-fluid align-self-stretch p-0" >
     <!-- Título da página -->
-    <div class="d-flex flex-row align-items-center border-bottom border-black sticky-top bg-white" style="height: 48px;">
-        <h4>
-            Manutenção de Projetos
-        </h4>
-        <button *ngIf="equipeParam != null" class="btn btn-primary btn-sm ms-3" (click)="desmarcarEquipe()" style="width: 180px;">
-            Desmarcar equipe
-        </button>
+    <div class="row border-bottom border-black sticky-top bg-white pb-2" style="height: 48px;">
+         <div class="d-flex flex-row align-items-center h-100 w-100">
+             <h4>
+                 Manutenção de Projetos
+             </h4>
+             <button *ngIf="equipeParam != null" class="btn btn-primary btn-sm ms-3" (click)="desmarcarEquipe()" style="width: 180px;">
+                 Desmarcar equipe
+             </button>
+         </div>
     </div>
 
     <!-- Opção de adicionar novo projeto -->
