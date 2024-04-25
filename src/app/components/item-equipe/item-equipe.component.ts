@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Equipe } from '../../interfaces/equipe';
 import { CurrentEquipeService } from '../../utils/current-equipe.service';
 import { User } from '../../interfaces/user';
+import { DialogCentralService } from '../../utils/dialog-central.service';
 
 @Component({
   selector: 'app-item-equipe',
@@ -18,10 +19,13 @@ export class ItemEquipeComponent implements OnInit{
 
   users: User[] = [];
 
+  dialogKey = 'di-equipes';
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private currentEquipe: CurrentEquipeService
+    private currentEquipe: CurrentEquipeService,
+    private dialogService: DialogCentralService
   ) {
 
   }
@@ -44,6 +48,14 @@ export class ItemEquipeComponent implements OnInit{
   }
 
   // Remove um usuário da equipe
+  removeuserconfirm(user: User) {
+    this.dialogService.config({
+      key: this.dialogKey, 
+      text: 'Deseja atualizar a nova equipe?', 
+      title: 'Confirmar',
+      type: 'crud'
+    }, () => {this.removeUser(user);});
+  }
   removeUser(user: User) {
     // http delete...
     this.getUsers();
@@ -77,11 +89,48 @@ export class ItemEquipeComponent implements OnInit{
   }
 
   // Atualiza a equipe
+  updateequipeconfirm() {
+    this.dialogService.config({
+      key: this.dialogKey, 
+      text: 'Deseja atualizar a equipe?', 
+      title: 'Confirmar',
+      type: 'crud'
+    }, () => {this.updateEquipe()});
+  }
   updateEquipe() {
-
+    // http post...
   }
 
+  // Deleta a equipe
+  deleteequipeconfirm() {
+    this.dialogService.config({
+      key: this.dialogKey, 
+      text: 'Deseja deletar a equipe?', 
+      title: 'Confirmar',
+      type: 'crud'
+    }, () => {this.deleteEquipe()});
+  }
   deleteEquipe() {
-    
+    // http post...
+  }
+
+  adicionarpartconfirm() {
+    this.dialogService.config({
+      key: this.dialogKey, 
+      text: 'Deseja adicionar o participante a equipe?', 
+      title: 'Confirmar',
+      type: 'crud'
+    }, () => {this.adicionarParticipante()});
+  }
+  adicionarParticipante() {
+    // http post verifica participante
+    // http post adicionar participante
+
+    this.dialogService.config({
+      key: this.dialogKey, 
+      text: 'Participante não encontrado', 
+      title: 'Erro',
+      type: 'message'
+    });
   }
 }

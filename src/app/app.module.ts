@@ -18,8 +18,6 @@ import { CreateAreaComponent } from './components/create-area/create-area.compon
 import { ItemEquipeComponent } from './components/item-equipe/item-equipe.component';
 import { ProjetoWrapperComponent } from './pages/projeto-wrapper/projeto-wrapper.component';
 import { ItemProjetoComponent } from './components/item-projeto/item-projeto.component';
-// import { NgxAwesomePopupModule, DialogConfigModule, ConfirmBoxConfigModule, ToastNotificationConfigModule } from '@costlydeveloper/ngx-awesome-popup';
-import { provideNgVibeDialog } from '@ng-vibe/dialog';
 import { DialogcompComponent } from './components/dialogcomp/dialogcomp.component';
 
 @NgModule({
@@ -44,14 +42,9 @@ import { DialogcompComponent } from './components/dialogcomp/dialogcomp.componen
     AppRoutingModule,
     FormsModule,
     FontAwesomeModule,
-    DigitOnlyModule,
-    // NgxAwesomePopupModule.forRoot(), 
-    // DialogConfigModule.forRoot(),
-    // ConfirmBoxConfigModule.forRoot(),
-    // ToastNotificationConfigModule.forRoot()
+    DigitOnlyModule
   ],
   providers: [
-    provideNgVibeDialog()
   ],
   bootstrap: [AppComponent]
 })

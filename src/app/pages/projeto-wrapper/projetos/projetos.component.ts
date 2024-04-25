@@ -5,6 +5,7 @@ import { Projeto } from '../../../interfaces/projeto';
 import { Equipe } from '../../../interfaces/equipe';
 import { CurrentEquipeService } from '../../../utils/current-equipe.service';
 import { Equipescredenciadas } from '../../../interfaces/equipescredenciadas';
+import { DialogCentralService } from '../../../utils/dialog-central.service';
 
 @Component({
   selector: 'app-projetos',
@@ -25,11 +26,14 @@ export class ProjetosComponent implements OnInit{
 
   projetosAtuais: Projeto[] = [];
 
+  dialogKey = 'di-projetos';
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private projetosWatcher: AddProjetoService,
-    private currentEquipe: CurrentEquipeService
+    private currentEquipe: CurrentEquipeService,
+    private dialogService: DialogCentralService
   ) {
 
   }
@@ -92,6 +96,14 @@ export class ProjetosComponent implements OnInit{
   }
 
   // Evento do formulário para adição do projeto
+  addprojetoconfirm() {
+    this.dialogService.config({
+      key: this.dialogKey, 
+      text: 'Deseja adicionar um projeto?', 
+      title: 'Confirmar',
+      type: 'crud'
+    }, () => { this.adicionarProjeto() });
+  }
   adicionarProjeto() {
 
     if(this.nome.trim() == '')
