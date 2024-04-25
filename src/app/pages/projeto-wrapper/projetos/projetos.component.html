@@ -53,7 +53,7 @@
 
         <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center p-0">
             <!-- Controle de visibilidade para adição do projeto -->
-            <button class="btn btn-success btn-sm" (click)="adicionarProjeto()" *ngIf="!disableCreateProjeto">
+            <button class="btn btn-success btn-sm" (click)="addprojetoconfirm()" *ngIf="!disableCreateProjeto">
                 <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
                 <span>Adicionar projeto</span>
             </button>
@@ -75,4 +75,6 @@
             <app-item-projeto *ngFor="let projeto of projetosAtuais" [projeto]="projeto"></app-item-projeto>
         </div>
     </div>
+
+    <app-dialogcomp [key]="dialogKey"></app-dialogcomp>
 </div>

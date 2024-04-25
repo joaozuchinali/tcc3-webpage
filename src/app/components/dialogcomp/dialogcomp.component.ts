@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ShowDialogService } from '../../utils/show-dialog.service';
 import { Dialoginfos } from '../../interfaces/dialoginfos';
 
@@ -7,16 +7,20 @@ import { Dialoginfos } from '../../interfaces/dialoginfos';
   templateUrl: './dialogcomp.component.html',
   styleUrl: './dialogcomp.component.scss'
 })
-export class DialogcompComponent {
+export class DialogcompComponent implements OnInit{
   @Input('key') key: string = '';
 
   infoslocal?: Dialoginfos;
   exib: boolean = false;
 
   constructor(
-    private dialogService: ShowDialogService
+    private showDialogService: ShowDialogService
   ) {
-    this.dialogService.show.subscribe((values: Dialoginfos) => {
+    
+  }
+
+  ngOnInit(): void {
+    this.showDialogService.show.subscribe((values: Dialoginfos) => {
       if(values.key == this.key) {
         this.show(values);
       }
@@ -28,13 +32,18 @@ export class DialogcompComponent {
     this.exib = true;
   }
 
-  close() {
+  refuse() {
     this.exib = false;
-    this.dialogService.info.next({key: this.key, value: false});
+    this.showDialogService.info.next({key: this.key, value: false});
   }
 
   confirm() {
     this.exib = false;
-    this.dialogService.info.next({key: this.key, value: true});
+    this.showDialogService.info.next({key: this.key, value: true});
+  }
+
+  close() {
+    this.exib = false;
+    this.showDialogService.info.next({key: this.key, value: -1});
   }
 }

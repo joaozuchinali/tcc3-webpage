@@ -10,9 +10,13 @@
             <div class="modal-body">
                 {{this.infoslocal?.text}}
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-sm" (click)="close()">Negar</button>
+            <div class="modal-footer" *ngIf="infoslocal && (infoslocal.type == undefined || infoslocal.type == 'crud')">
+                <button type="button" class="btn btn-danger btn-sm" (click)="refuse()">Negar</button>
                 <button type="button" class="btn btn-success btn-sm" (click)="confirm()">Confirmar</button>
+            </div>
+
+            <div class="modal-footer" *ngIf="infoslocal && infoslocal.type == 'message'">
+                <button type="button" class="btn btn-danger btn-sm" (click)="close()">Fechar</button>
             </div>
         </div>
     </div>

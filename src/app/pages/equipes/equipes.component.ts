@@ -4,6 +4,7 @@ import { CurrentUserService } from '../../utils/current-user.service';
 import { Equipe } from '../../interfaces/equipe';
 import { Equipeuso } from '../../interfaces/equipeuso';
 import { Equipesget } from '../../interfaces/equipesget';
+import { DialogCentralService } from '../../utils/dialog-central.service';
 
 @Component({
   selector: 'app-equipes',
@@ -15,10 +16,13 @@ export class EquipesComponent implements OnInit{
   nomeEquipe: string = '';
 
   equipes: Equipe[] = []
+  
+  dialogKey = 'di-equipes';
 
   constructor(
     private addequipe: AddEquipeService,
-    private currentUser: CurrentUserService
+    private currentUser: CurrentUserService,
+    private dialogService: DialogCentralService
   ) {
 
   }
@@ -34,14 +38,25 @@ export class EquipesComponent implements OnInit{
     });
   }
 
+  adicionarequipeconfirm() {
+    this.dialogService.config({
+      key: this.dialogKey, 
+      text: 'Deseja adicionar uma nova equipe?', 
+      title: 'Confirmar',
+      type: 'crud'
+    }, () => { this.adicionarEquipe() });
+  }
   adicionarEquipe() {
-    // console.log(this.nomeEquipe);
-
     if(this.nomeEquipe.trim() != '') {
       const newEquipe: Equipe = {nome: this.nomeEquipe, idstatus: -1, idequipe: -1}
       this.postEquipe(newEquipe);
     } else {
-
+      this.dialogService.config({
+        key: this.dialogKey, 
+        text: 'Preencha todos os campos!', 
+        title: 'Erro ao cadastrar', 
+        type: 'message'
+      });
     }
   }
   // Cria uma nova equipe

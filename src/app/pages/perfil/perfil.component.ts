@@ -14,7 +14,7 @@ export class PerfilComponent implements OnInit {
   senha: string = '';
   email: string = '';
 
-  private dialogKey = 'di-perfil';
+  dialogKey = 'di-perfil';
 
   constructor(
     private router: Router,
@@ -67,10 +67,20 @@ export class PerfilComponent implements OnInit {
   }
 
   confirmUpdate() {
-    this.dialogService.config({key: this.dialogKey, text: 'Deseja atualizar esse perfil?', title: 'Confirmar'}, this.atualizar, () => {});
+    this.dialogService.config({
+      key: this.dialogKey, 
+      text: 'Deseja atualizar esse perfil?', 
+      title: 'Confirmar',
+      type: 'crud'
+    }, () => { this.atualizar() });
   }
 
   confirmDelete() {
-    this.dialogService.config({key: this.dialogKey, text: 'Deseja deletar esse perfil?', title: 'Confirmar'}, this.deletar, () => {});
+    this.dialogService.config({
+      key: this.dialogKey, 
+      text: 'Deseja deletar esse perfil?', 
+      title: 'Confirmar',
+      type: 'crud'
+    }, () => { this.deletar() });
   }
 }

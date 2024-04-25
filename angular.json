@@ -38,8 +38,6 @@
             ],
             "styles": [
               "node_modules/bootstrap/scss/bootstrap.scss",
-              "node_modules/@costlydeveloper/ngx-awesome-popup/styles/theme.css",
-              "node_modules/@ng-vibe/dialog/styles/styles.css",
               "src/styles.scss"
             ],
             "scripts": []
