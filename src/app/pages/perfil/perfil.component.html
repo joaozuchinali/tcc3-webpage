@@ -34,15 +34,17 @@
         </div>
 
         <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center p-0">
-            <button class="btn btn-success btn-sm" (click)="atualizar()">
+            <button class="btn btn-success btn-sm" (click)="confirmUpdate()">
                 <fa-icon [icon]="['fas', 'rotate-right']" class="me-2"></fa-icon>
                 <span>Atualizar</span>
             </button>
 
-            <button class="btn btn-danger btn-sm" (click)="deletar()">
+            <button class="btn btn-danger btn-sm" (click)="confirmDelete()">
                 <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
                 <span>Deletar perfil</span>
             </button>
         </div>
     </div>
+
+    <app-dialogcomp [key]="'di-perfil'"></app-dialogcomp>
 </div>

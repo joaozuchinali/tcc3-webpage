@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrentUserService } from '../../utils/current-user.service';
 import { User } from '../../interfaces/user';
 import { Datalogin } from '../../interfaces/datalogin';
 import { Datacreateuser } from '../../interfaces/datacreateuser';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
-
+export class LoginComponent implements OnInit{
   emailLogin: string = '';
   senhaLogin: string = '';
 
@@ -27,6 +27,10 @@ export class LoginComponent {
     private currentUser: CurrentUserService
   ) { }
 
+  ngOnInit(): void {
+    
+   
+  }
   // Evento de login registrado
   login(): void {
 
