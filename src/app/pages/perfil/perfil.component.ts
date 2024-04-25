@@ -31,7 +31,7 @@ export class PerfilComponent implements OnInit {
 
   // Preenche os campos com os dados atuais do usuário
   fillCampos(): void {
-    const user = this.currentUser.getUser();
+    const user = this.currentUser.get();
     this.nome  = user.nome;
     this.senha = user.senha;
     this.email = user.email;
@@ -52,7 +52,7 @@ export class PerfilComponent implements OnInit {
   }
 
   updateUser() {
-    const user = this.currentUser.getUser();
+    const user = this.currentUser.get();
     user.email = this.email;
     user.senha = this.senha;
     user.nome  = this.nome;

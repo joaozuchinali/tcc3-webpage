@@ -19,6 +19,7 @@ import { ItemEquipeComponent } from './components/item-equipe/item-equipe.compon
 import { ProjetoWrapperComponent } from './pages/projeto-wrapper/projeto-wrapper.component';
 import { ItemProjetoComponent } from './components/item-projeto/item-projeto.component';
 import { DialogcompComponent } from './components/dialogcomp/dialogcomp.component';
+import { BlockedComponent } from './pages/blocked/blocked.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { DialogcompComponent } from './components/dialogcomp/dialogcomp.componen
     ItemEquipeComponent,
     ProjetoWrapperComponent,
     ItemProjetoComponent,
-    DialogcompComponent
+    DialogcompComponent,
+    BlockedComponent
   ],
   imports: [
     BrowserModule,

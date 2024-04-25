@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Projeto } from '../../interfaces/projeto';
+import { CurrentProjetoService } from '../../utils/current-projeto.service';
 
 @Component({
   selector: 'app-item-projeto',
@@ -15,7 +16,8 @@ export class ItemProjetoComponent {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private currentProjeto: CurrentProjetoService
   ) {
 
   }
@@ -29,6 +31,7 @@ export class ItemProjetoComponent {
   }
 
   verProjeto() {
-    this.router.navigate([`../projeto`], { relativeTo: this.route});
+    this.currentProjeto.set(this.projeto);
+    this.router.navigate([String(this.projeto.identificador)], { relativeTo: this.route });
   }
 }

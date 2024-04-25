@@ -68,7 +68,7 @@ export class EquipesComponent implements OnInit{
       nome: 'teste'
     };
 
-    const usuario = this.currentUser.getUser();
+    const usuario = this.currentUser.get();
 
     const equipeUso: Equipeuso = { 
       idcredencial: 2, 
@@ -99,7 +99,7 @@ export class EquipesComponent implements OnInit{
 
   // Retorna as equipes do ERP
   getEquipes(): void {
-    const user = this.currentUser.getUser();
+    const user = this.currentUser.get();
     const queryinfo: Equipesget = {
       idstatus: 1,
       idusuario: user.idusuario

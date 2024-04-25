@@ -78,7 +78,7 @@ export class ItemEquipeComponent implements OnInit{
 
   // redireciona para visualizar os projetos da equipe
   verProjetos() {
-    this.currentEquipe.setEquipe(this.equipe);
+    this.currentEquipe.set(this.equipe);
     
     this.router.navigate(
       [`../projetos`], 

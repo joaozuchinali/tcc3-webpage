@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { Equipe } from '../interfaces/equipe';
 import { Subject } from 'rxjs';
 import { LocalStorageService } from 'angular-web-storage';
+import { CurrentStorage } from '../interfaces/current-storage';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CurrentEquipeService {
+export class CurrentEquipeService implements CurrentStorage {
   private currentEquipe: Equipe = {idequipe: -1, idstatus: -1, nome: ''};
   private key: string = 'equipe-atual';
 
@@ -15,7 +16,7 @@ export class CurrentEquipeService {
   ) { }
 
   // Define a equipe atual
-  setEquipe(info: Equipe, ignore: boolean = false): void {
+  set(info: Equipe, ignore: boolean = false): void {
     this.currentEquipe = info;
 
     if(ignore == false)
@@ -23,16 +24,16 @@ export class CurrentEquipeService {
   }
 
   // Salva o registro em localstorage
-  private setLocalStorage(userinfo: Equipe): void {
-    this.local.set(this.key, userinfo, 0, 'w');
+  setLocalStorage(info: Equipe): void {
+    this.local.set(this.key, info, 0, 'w');
   }
 
   // Retorna a equipe atual
-  getEquipe(): Equipe {
+  get(): Equipe {
     if(this.currentEquipe.idequipe == -1) {
       const saved = this.getLocal();
       if(saved) {
-        this.setEquipe(saved, true);
+        this.set(saved, true);
       } else {
         this.currentEquipe = {idequipe: -1, idstatus: -1, nome: ''};
       }
@@ -42,13 +43,13 @@ export class CurrentEquipeService {
   }
 
   // Retorna o usuário salvo no local storage
-  private getLocal() {
+  getLocal() {
     const value = this.local.get(this.key);
     return value;
   }
 
   // Limpa a equipe atual
-  clearEquipe(): void {
+  clear(): void {
     this.currentEquipe = {idequipe: -1, idstatus: -1, nome: ''};
     this.local.remove(this.key);
   }
