@@ -3,8 +3,12 @@ import { AddEquipeService } from '../../utils/add-equipe.service';
 import { CurrentUserService } from '../../utils/current-user.service';
 import { Equipe } from '../../interfaces/equipe';
 import { Equipeuso } from '../../interfaces/equipeuso';
-import { Equipesget } from '../../interfaces/equipesget';
+import { Equipesget } from '../../interfaces/api/equipes-get';
 import { DialogCentralService } from '../../utils/dialog-central.service';
+import { HttpClient } from '@angular/common/http';
+import { ApiUrlsService } from '../../utils/api-urls.service';
+import { HttpRetorno } from '../../interfaces/api/http-retorno';
+import { ListEquipesService } from '../../utils/list-equipes.service';
 
 @Component({
   selector: 'app-equipes',
@@ -22,7 +26,10 @@ export class EquipesComponent implements OnInit{
   constructor(
     private addequipe: AddEquipeService,
     private currentUser: CurrentUserService,
-    private dialogService: DialogCentralService
+    private dialogService: DialogCentralService,
+    private http: HttpClient,
+    private apiUrls: ApiUrlsService,
+    private listEquipe: ListEquipesService
   ) {
 
   }
@@ -30,6 +37,10 @@ export class EquipesComponent implements OnInit{
   ngOnInit(): void {
     this.addEquipesEventWatcher();
     this.getEquipes();
+    
+    this.listEquipe.list.subscribe((val) => {
+      this.getEquipes()
+    });
   }
 
   addEquipesEventWatcher() {
@@ -61,28 +72,57 @@ export class EquipesComponent implements OnInit{
   }
   // Cria uma nova equipe
   postEquipe(infos: Equipe) {
-    // http post
-    const equipeCriada: Equipe = {
-      idequipe: -1, 
-      idstatus: 1, 
-      nome: 'teste'
-    };
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.createEquipe, infos)
+    .subscribe({
+      next: (value) => {
+        console.log(value);
+        if(value.data && value.data instanceof Object) {
+          const usuario = this.currentUser.get();
+          const equipeUso: Equipeuso = { 
+            idcredencial: 2, 
+            idequipe: value.data.idequipe, 
+            idusuario: usuario.idusuario
+          };
 
-    const usuario = this.currentUser.get();
-
-    const equipeUso: Equipeuso = { 
-      idcredencial: 2, 
-      idequipe: equipeCriada.idequipe, 
-      idusuario: usuario.idusuario
-    }
-
-    this.postEquipeUso(equipeUso)
+          this.postEquipeUso(equipeUso)
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        if(err.error.status && err.error.status == 'error') {
+          this.dialogService.config({
+            key: this.dialogKey, 
+            text: 'Não foi possível carregar as suas equipes.', 
+            title: 'Erro no cadastro',
+            type: 'message'
+          });
+        }
+      }
+    });
   }
   // Cria uma relação entre a equipe e o usuário
   postEquipeUso(infos: Equipeuso) {
-    // http post
-    console.log(infos);
-    this.clearFields();
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.createEquipeUso, infos)
+    .subscribe({
+      next: (value) => {
+        console.log(value);
+        if(value.data && value.status == 'success' && value.data instanceof Object) {
+          this.clearFields();
+          this.getEquipes();
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        if(err.error.status && err.error.status == 'error') {
+          this.dialogService.config({
+            key: this.dialogKey, 
+            text: 'Não foi possível cadastrar a relação entre usuário e equipe.', 
+            title: 'Erro no cadastro',
+            type: 'message'
+          });
+        }
+      }
+    });
   }
 
   // Limpar os campos após a criação
@@ -104,11 +144,26 @@ export class EquipesComponent implements OnInit{
       idstatus: 1,
       idusuario: user.idusuario
     };
-    // http get
-    this.equipes = [
-      {idequipe: 1, idstatus: 1, nome: 'Equipes 1'},
-      {idequipe: 2, idstatus: 2, nome: 'Equipes 2'},
-      {idequipe: 3, idstatus: 3, nome: 'Equipes 3'}
-    ];
+
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.getEquipes, queryinfo)
+    .subscribe({
+      next: (value) => {
+        console.log(value);
+        if(value.data && value.data instanceof Array) {
+          this.equipes = <Equipe[]>value.data;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        if(err.error.status && err.error.status == 'error') {
+          this.dialogService.config({
+            key: this.dialogKey, 
+            text: 'Não foi possível carregar as suas equipes.', 
+            title: 'Equipes cadastradas',
+            type: 'message'
+          });
+        }
+      }
+    });
   }
 }

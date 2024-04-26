@@ -6,6 +6,15 @@ import { Equipe } from '../../../interfaces/equipe';
 import { CurrentEquipeService } from '../../../utils/current-equipe.service';
 import { Equipescredenciadas } from '../../../interfaces/equipescredenciadas';
 import { DialogCentralService } from '../../../utils/dialog-central.service';
+import { HttpClient } from '@angular/common/http';
+import { HttpRetorno } from '../../../interfaces/api/http-retorno';
+import { ApiUrlsService } from '../../../utils/api-urls.service';
+import { Equipesget } from '../../../interfaces/api/equipes-get';
+import { CurrentUserService } from '../../../utils/current-user.service';
+import { ProjetoCreate } from '../../../interfaces/api/projeto-create';
+import { ProjetoGetByUser } from '../../../interfaces/api/projeto-get-by-user';
+import { ProjetoGetByEquipe } from '../../../interfaces/api/projeto-get-by-equipe';
+import { ListProjetosService } from '../../../utils/list-projetos.service';
 
 @Component({
   selector: 'app-projetos',
@@ -33,7 +42,11 @@ export class ProjetosComponent implements OnInit{
     private route: ActivatedRoute,
     private projetosWatcher: AddProjetoService,
     private currentEquipe: CurrentEquipeService,
-    private dialogService: DialogCentralService
+    private currentUser: CurrentUserService,
+    private dialogService: DialogCentralService,
+    private http: HttpClient,
+    private listProjeto: ListProjetosService,
+    private apiUrls: ApiUrlsService
   ) {
 
   }
@@ -44,26 +57,49 @@ export class ProjetosComponent implements OnInit{
       this.equipeParam = equipeFilter;
       this.idequipe = String(equipeFilter.idequipe);
       this.disableSelectEquipe = true;
+    }
 
+    this.projetosLoad();
+    this.getEquipes();
+    this.addProjetoEventWatcher();
+
+    this.listProjeto.list.subscribe((e) => {
+      this.projetosLoad();
+    });
+  }
+
+  private projetosLoad() {
+    const equipeFilter = this.currentEquipe.get();
+    if(equipeFilter.idequipe != -1) {
       this.getProjetosEquipe();
     } else {
       this.getProjetosUsuario();
     }
-
-    this.getEquipes();
-    this.addProjetoEventWatcher();
   }
 
   // Retorna todas as equipes com as quais o usuário está relacionado
   getEquipes(): void  {
-    // http get
-    this.equipesSelect = [
-      {idequipe: 1, idstatus: 1, nome: 'Equipe 1', idcredencial: 2},
-      {idequipe: 2, idstatus: 2, nome: 'Equipe 2', idcredencial: 1},
-      {idequipe: 3, idstatus: 3, nome: 'Equipe 3', idcredencial: 2}
-    ];
+    const user = this.currentUser.get();
+    const queryinfo: Equipesget = {
+      idstatus: 1,
+      idusuario: user.idusuario
+    };
 
-    this.verificaCredencialEquipe();
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.getEquipes, queryinfo)
+    .subscribe({
+      next: (value) => {
+        console.log(value);
+        if(value.data && value.data instanceof Array) {
+          this.equipesSelect = <Equipescredenciadas[]>value.data;
+          this.verificaCredencialEquipe();
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        if(err.error.status && err.error.status == 'error') {
+        }
+      }
+    });
   }
 
   // Configura o botão de adição do projeto em caso de ser
@@ -97,6 +133,16 @@ export class ProjetosComponent implements OnInit{
 
   // Evento do formulário para adição do projeto
   addprojetoconfirm() {
+    if(this.nome.trim() == '' || this.idequipe.trim() == '' || this.codigoAcesso.trim() == '') {
+      this.dialogService.config({
+        key: this.dialogKey, 
+        text: 'Prencha todos os campos antes de adicionar o projeto?', 
+        title: 'Campos vazios',
+        type: 'message'
+      });
+      return;
+    }
+
     this.dialogService.config({
       key: this.dialogKey, 
       text: 'Deseja adicionar um projeto?', 
@@ -105,16 +151,6 @@ export class ProjetosComponent implements OnInit{
     }, () => { this.adicionarProjeto() });
   }
   adicionarProjeto() {
-
-    if(this.nome.trim() == '')
-      return
-
-    if(this.idequipe == '')
-      return;
-
-    if(this.codigoAcesso == '')
-      return;
-
     const projeto: Projeto = {
       codigo: Number(this.codigoAcesso),
       identificador: '',
@@ -129,9 +165,27 @@ export class ProjetosComponent implements OnInit{
 
   // Cria um novo projeto
   postProjeto(infos: Projeto) {
-    console.log(infos);
-    // http...
-    this.clearFields();
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.createProjeto, infos)
+    .subscribe({
+      next: (value) => {
+        console.log(value);
+        if(value.data && value.data instanceof Object && value.status == 'success') {
+          this.clearFields();
+          this.projetosLoad();
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        if(err.error.status && err.error.status == 'error') {
+          this.dialogService.config({
+            key: this.dialogKey, 
+            text: 'Não foi possível cadastrar o novo projeto!', 
+            title: 'Erro de cadastro',
+            type: 'message'
+          });
+        }
+      }
+    });
   }
 
   // Limpar os campos após a criação
@@ -147,28 +201,58 @@ export class ProjetosComponent implements OnInit{
     this.adicionandoProjeto = false;
   }
 
+  // Retorna todos os projetos da equipe que redirecionou para a tela do usuário
   getProjetosEquipe(): void {
-    // http get
-    this.projetosAtuais = [
-      {codigo: 1, identificador: 'X', idequipe: 1, idprojeto: 1, idstatus: 1, nome: 'Projeto 10'},
-      {codigo: 1, identificador: 'Y', idequipe: 2, idprojeto: 2, idstatus: 1, nome: 'Projeto 20'},
-      {codigo: 1, identificador: 'Z', idequipe: 3, idprojeto: 3, idstatus: 1, nome: 'Projeto 30'}
-    ]
+    const query: ProjetoGetByEquipe = {
+      idstatus: 1,
+      idequipe: this.equipeParam!.idequipe
+    };
+
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.getProjetosEquipe, query)
+    .subscribe({
+      next: (value) => {
+        console.log(value);
+        if(value.data && value.data instanceof Array) {
+          this.projetosAtuais = <Projeto[]>value.data;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        if(err.error.status && err.error.status == 'error') {
+        }
+      }
+    });
   }
 
+  // Retorna todos os projetos do usuário
   getProjetosUsuario(): void {
-    // http get
-    this.projetosAtuais = [
-      {codigo: 1, identificador: 'X', idequipe: 1, idprojeto: 1, idstatus: 1, nome: 'Projeto 01'},
-      {codigo: 1, identificador: 'Y', idequipe: 2, idprojeto: 2, idstatus: 1, nome: 'Projeto 02'},
-      {codigo: 1, identificador: 'Z', idequipe: 3, idprojeto: 3, idstatus: 1, nome: 'Projeto 03'}
-    ]
+    const user = this.currentUser.get();
+    const query: ProjetoGetByUser = {
+      idstatus: 1,
+      idusuario: user.idusuario
+    };
+
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.getProjetosUsuario, query)
+    .subscribe({
+      next: (value) => {
+        console.log(value);
+        if(value.data && value.data instanceof Array) {
+          this.projetosAtuais = <Projeto[]>value.data;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        if(err.error.status && err.error.status == 'error') {
+        }
+      }
+    });
   }
 
   // Desmarca uma equipe seleciona através de redirecionamento
   desmarcarEquipe() {
+    this.currentEquipe.clear();
     this.equipeParam = null;
     this.disableSelectEquipe = false;
-    this.getProjetosUsuario();
+    this.projetosLoad();
   }
 }
