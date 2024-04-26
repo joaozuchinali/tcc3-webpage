@@ -7,7 +7,8 @@ export class ConversorService {
 
   constructor() { }
 
-  msToTime(duration: number): string {
+  msToTime(dInput: number | string): string {
+    let duration = Number(dInput);
     // var milliseconds: any = parseInt(String((duration%1000)/100));
     let seconds: any = parseInt(String((duration/1000)%60))
     let minutes: any = parseInt(String((duration/(1000*60))%60))
