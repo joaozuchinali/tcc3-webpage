@@ -25,7 +25,10 @@ export class ApiUrlsService {
   readonly getProjetosUsuario: string = 'projetos/getalluser/';
   readonly getProjetosEquipe: string = 'projetos/getall/';
   readonly updateProjeto: string = 'projetos/update/';
-  readonly deleteProjeto: string = 'projetos/inativar/'
+  readonly deleteProjeto: string = 'projetos/inativar/';
+
+  readonly projetoVisaoGeral: string = 'registros/visaogeral/';
+  readonly projetoDominios: string = 'registros/infosdominio/';
 
   constructor(
   

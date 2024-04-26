@@ -35,7 +35,7 @@ export class ProjetoComponent implements OnInit {
     this.identificador = this.route.snapshot.params['identificador'];  
     this.route.params.subscribe((data) => {
       this.identificador = data['identificador'];
-      console.log(this.identificador);
+      // console.log(this.identificador);
     });
   }
 

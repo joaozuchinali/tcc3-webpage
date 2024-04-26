@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { DominiosPesquisados } from '../../../interfaces/dominios-pesquisados';
 import { ConversorService } from '../../../utils/conversor.service';
+import { CurrentProjetoService } from '../../../utils/current-projeto.service';
+import { DialogCentralService } from '../../../utils/dialog-central.service';
+import { HttpClient } from '@angular/common/http';
+import { ApiUrlsService } from '../../../utils/api-urls.service';
+import { GetProjetoInfosDominio, ProjetoInfosDominio } from '../../../interfaces/api/get-projeto-infos-dominio';
+import { HttpRetorno } from '../../../interfaces/api/http-retorno';
 
 @Component({
   selector: 'app-dominios-projeto',
@@ -9,29 +14,57 @@ import { ConversorService } from '../../../utils/conversor.service';
 })
 export class DominiosProjetoComponent implements OnInit {
 
-  dominiosList: DominiosPesquisados[] = [];
+  dialogKey: string = 'di-projeto-atual';
+
+  dominiosList: ProjetoInfosDominio[] = [];
   limite: string = '';
   ordencao: string = '';
   
   constructor(
-    public conversor: ConversorService
+    public conversor: ConversorService,
+    private currentProject: CurrentProjetoService,
+    private dialogService: DialogCentralService,
+    private http: HttpClient,
+    private apiUrls: ApiUrlsService
   ) {
 
   }
 
   ngOnInit(): void {
-    this.buildDominios();
+    this.getDominios();
   }
 
-  buildDominios() {
-    this.dominiosList = [
-      { full: false, nome: 'exemplo.com.br', pesquisas: 33, tempo: 11281281298, usuarios: 33},
-      { full: false, nome: 'exemplo2.com.br', pesquisas: 33, tempo: 11281281298, usuarios: 33},
-      { full: false, nome: 'exemplo3.com.br', pesquisas: 33, tempo: 11281281298, usuarios: 33}
-    ]
+  getDominios() {
+    const projeto = this.currentProject.get();
+    
+    const query: GetProjetoInfosDominio = {
+      idprojeto: projeto.idprojeto
+    }
+
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.projetoDominios, query)
+    .subscribe({
+      next: (value) => {
+        if(value.data && value.data instanceof Object) {
+          const infos = (<ProjetoInfosDominio[]>value.data).map(e => {e.full = false; return e;});
+          this.dominiosList = infos;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+
+        if(err.error.status && err.error.status == 'error') {
+          this.dialogService.config({
+            key: this.dialogKey, 
+            text: 'Não foi possível carregar os dados dos domínios.', 
+            title: 'Usuário não encontrado',
+            type: 'message'
+          });
+        }
+      }
+    });
   }
 
-  changeCard(item: DominiosPesquisados) {
+  changeCard(item: ProjetoInfosDominio) {
     item.full = !item.full;
   }
 }

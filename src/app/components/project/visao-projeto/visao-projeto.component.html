@@ -5,10 +5,10 @@
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="mb-2">
-                        <span class="fs-5">Equipe do projeto: </span>
+                        <span class="fs-5"><b>Equipe do projeto: </b> {{visaoGeral.equipe_nome}}</span>
                     </div>
                     <div>
-                        <span class="fs-5">Status do projeto: </span>
+                        <span class="fs-5"><b>Status do projeto:</b> {{visaoGeral.status_nome}}</span>
                     </div>
                 </div>
             </div>
@@ -16,16 +16,16 @@
                 <div class="card-body">
                     
                     <div class="mb-2">
-                        <span class="fs-5">Quantidade de usuários pesquisados: </span>
+                        <span class="fs-5"><b>Quantidade de usuários pesquisados: </b>{{visaoGeral.uso_pesquisados}}</span>
                     </div>
                     <div class="mb-2">
-                        <span class="fs-5">Quantidade de registros de navegação: </span>
+                        <span class="fs-5"><b>Quantidade de registros de navegação:</b> {{visaoGeral.registros_count}}</span>
                     </div>
                     <div class="mb-2">
-                        <span class="fs-5">Quantidade de tempo de navegação: </span>
+                        <span class="fs-5"><b>Quantidade de tempo de navegação:</b> {{conversor.msToTime(visaoGeral.time_navegacao)}}</span>
                     </div>
                     <div>
-                        <span class="fs-5">Quantidade de domínios pesquisados: </span>
+                        <span class="fs-5"><b>Quantidade de domínios pesquisados:</b> {{visaoGeral.dominios_count}}</span>
                     </div>
                 </div>
             </div>
