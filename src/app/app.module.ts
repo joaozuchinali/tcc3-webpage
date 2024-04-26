@@ -23,6 +23,7 @@ import { BlockedComponent } from './pages/blocked/blocked.component';
 import { DominiosProjetoComponent } from './components/project/dominios-projeto/dominios-projeto.component';
 import { TempoProjetoComponent } from './components/project/tempo-projeto/tempo-projeto.component';
 import { NgApexchartsModule } from "ng-apexcharts";
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { NgApexchartsModule } from "ng-apexcharts";
     FormsModule,
     FontAwesomeModule,
     DigitOnlyModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+    HttpClientModule
   ],
   providers: [
   ],

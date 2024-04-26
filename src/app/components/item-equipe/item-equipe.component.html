@@ -8,7 +8,7 @@
         </h5>
 
         <div class="fs-6 d-flex align-items-center justify-content-center text-white rounded bg-primary" 
-             style="cursor: pointer; width: 24px;" (click)="edit()">
+             style="cursor: pointer; width: 24px;" (click)="editShow()">
             <fa-icon [icon]="['fas', 'gear']"  *ngIf="!editEquipe"></fa-icon>
             <fa-icon [icon]="['fas', 'minus']" *ngIf="editEquipe"></fa-icon>
         </div>
@@ -31,7 +31,7 @@
 
                 <button class="btn btn-danger btn-sm" (click)="deleteequipeconfirm()">
                     <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
-                    <span>Excluir</span>
+                    <span>Desabilitar</span>
                 </button>
             </div>
         </div>
@@ -46,7 +46,7 @@
                         Adicionar participante ao projeto:
                     </label>
                     
-                    <input class="form-control form-control-sm" id="email-request-equipe">
+                    <input class="form-control form-control-sm" id="email-request-equipe" [(ngModel)]="emailAddPart">
                 </div>
                 <button class="btn btn-primary btn-sm ms-2" (click)="adicionarpartconfirm()">
                     <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
@@ -60,17 +60,24 @@
                     <span style="font-size: 13.5px;">{{fallbacktext}}</span>
                 </div>
 
-                <div *ngIf="users.length > 0" class="d-flex flex-column align-items-stretch mt-1">
-                    <div *ngFor="let user of users"
-                         class="bg-body-tertiary p-2 pe-2 mb-2 shadow-sm rounded d-flex flex-row align-items-center justify-content-between">
-                        <span style="font-size: 13.5px;">{{user.nome}} - {{user.email}}</span>
-                        <div class="fs-6 text-danger bg-danger rounded text-white d-flex align-items-center justify-content-center" 
-                             style="cursor: pointer; width: 24px;"
-                             (click)="removeuserconfirm(user)">
-                            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                <div class="card" *ngIf="users.length > 0">
+                    <div class="card-body">
+                        <div *ngFor="let user of users; let i = index" class="card" [ngClass]="{'mt-2': i > 0}">
+                            <div class="card-body ">
+                                <div class="d-flex flex-row justify-content-between">
+                                    <!-- class="bg-body-tertiary p-2 pe-2 mb-2 shadow-sm rounded d-flex flex-row align-items-center justify-content-between" -->
+                                    <span style="font-size: 13.5px;">{{user.nome}} - {{user.email}}</span>
+                                    <div class="fs-6 text-danger bg-danger rounded text-white d-flex align-items-center justify-content-center" 
+                                        style="cursor: pointer; width: 24px;"
+                                        (click)="removeuserconfirm(user)">
+                                        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
