@@ -20,4 +20,10 @@ export class ConversorService {
 
     return hours + "h " + minutes + "m " + seconds + "s";
   }
+
+  msToHour(dInput: number | string): number {
+    let duration = Number(dInput);
+
+    return Number((duration / (1000 * 60 * 60)).toFixed(5));
+  }
 }

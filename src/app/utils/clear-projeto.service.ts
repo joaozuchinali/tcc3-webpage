@@ -13,8 +13,6 @@ export class ClearProjetoService implements Resolve<any> {
   ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>  | Promise<boolean> | boolean {
-    console.log(state.url);
-
     if(state.url.includes('/visao-geral') || state.url.includes('/usuarios-pesquisados') || state.url.includes('/dominios') || state.url.includes('/tempo')) 
     return false;
 

@@ -1,7 +1,4 @@
-export interface GetProjetoVisaoGeral {
-    idprojeto: number;
-}
- export interface ProjetoVisaoGeral {
+export interface ProjetoVisaoGeral {
     equipe_nome: string;
     status_nome: string;
     uso_pesquisados: number;

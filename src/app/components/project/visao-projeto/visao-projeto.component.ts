@@ -4,8 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { ApiUrlsService } from '../../../utils/api-urls.service';
 import { CurrentProjetoService } from '../../../utils/current-projeto.service';
 import { HttpRetorno } from '../../../interfaces/api/http-retorno';
-import { GetProjetoVisaoGeral, ProjetoVisaoGeral } from '../../../interfaces/api/get-projeto-visao-geral';
+import { ProjetoVisaoGeral } from '../../../interfaces/api/get-projeto-visao-geral';
 import { ConversorService } from '../../../utils/conversor.service';
+import { GetInfosByIdprojeto } from '../../../interfaces/api/get-infos-by-idprojeto';
 
 @Component({
   selector: 'app-visao-projeto',
@@ -43,7 +44,7 @@ export class VisaoProjetoComponent implements OnInit{
   private getVisaoGeral() {
     const projeto = this.currentProject.get();
     
-    const query: GetProjetoVisaoGeral = {
+    const query: GetInfosByIdprojeto = {
       idprojeto: projeto.idprojeto
     }
 

@@ -4,8 +4,9 @@ import { CurrentProjetoService } from '../../../utils/current-projeto.service';
 import { DialogCentralService } from '../../../utils/dialog-central.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlsService } from '../../../utils/api-urls.service';
-import { GetProjetoInfosDominio, ProjetoInfosDominio } from '../../../interfaces/api/get-projeto-infos-dominio';
+import { ProjetoInfosDominio } from '../../../interfaces/api/get-projeto-infos-dominio';
 import { HttpRetorno } from '../../../interfaces/api/http-retorno';
+import { GetInfosByIdprojeto } from '../../../interfaces/api/get-infos-by-idprojeto';
 
 @Component({
   selector: 'app-dominios-projeto',
@@ -37,7 +38,7 @@ export class DominiosProjetoComponent implements OnInit {
   getDominios() {
     const projeto = this.currentProject.get();
     
-    const query: GetProjetoInfosDominio = {
+    const query: GetInfosByIdprojeto = {
       idprojeto: projeto.idprojeto
     }
 
@@ -56,7 +57,7 @@ export class DominiosProjetoComponent implements OnInit {
           this.dialogService.config({
             key: this.dialogKey, 
             text: 'Não foi possível carregar os dados dos domínios.', 
-            title: 'Usuário não encontrado',
+            title: 'Dados não encontrados',
             type: 'message'
           });
         }
