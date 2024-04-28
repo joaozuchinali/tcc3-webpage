@@ -5,7 +5,7 @@
             <div class="card mt-4">
                 <div class="card-body">
                     <div>
-                        <span class="fs-5">Total: </span>
+                        <span class="fs-5">Total: {{conversor.msToTime(getFullTime())}}</span>
                     </div>
                 </div>
             </div>
@@ -15,7 +15,7 @@
                     <div>
                         <span class="fs-6"><b>Domínios por tempo:</b> </span>
                     </div>
-                    <apx-chart
+                    <apx-chart *ngIf="chartOptions"
                         [series]="chartOptions.series!"
                         [chart]="chartOptions.chart!"
                         [dataLabels]="chartOptions.dataLabels!"

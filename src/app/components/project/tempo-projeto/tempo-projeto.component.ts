@@ -20,6 +20,13 @@ export type ChartOptions = {
 };
 
 import { ConversorService } from '../../../utils/conversor.service';
+import { CurrentProjetoService } from '../../../utils/current-projeto.service';
+import { DialogCentralService } from '../../../utils/dialog-central.service';
+import { HttpClient } from '@angular/common/http';
+import { ApiUrlsService } from '../../../utils/api-urls.service';
+import { TempoDominio } from '../../../interfaces/api/tempo-dominio';
+import { HttpRetorno } from '../../../interfaces/api/http-retorno';
+import { GetInfosByIdprojeto } from '../../../interfaces/api/get-infos-by-idprojeto';
 
 @Component({
   selector: 'app-tempo-projeto',
@@ -27,29 +34,69 @@ import { ConversorService } from '../../../utils/conversor.service';
   styleUrl: './tempo-projeto.component.scss'
 })
 export class TempoProjetoComponent implements OnInit{
-  public chartOptions!: Partial<ChartOptions>;
+  public chartOptions: Partial<ChartOptions> | null = null;
 
   listaDiasTempo: DiasTempo[] = [];
+  temposDominios: TempoDominio[] = [];
+  dialogKey: string = 'di-projeto-atual';
+
   dataInicial: string = '';
   dataFinal: string = '';
   
   constructor(
-    public conversor: ConversorService
+    public conversor: ConversorService,
+    private currentProject: CurrentProjetoService,
+    private dialogService: DialogCentralService,
+    private http: HttpClient,
+    private apiUrls: ApiUrlsService
   ) {
     
   }
 
   ngOnInit(): void {
-    this.buildCharts();
+    this.getInfosDominioPorTempo();
     this.buildDias();
   }
 
+  getInfosDominioPorTempo() {
+    const projeto = this.currentProject.get();
+    
+    const query: GetInfosByIdprojeto = {
+      idprojeto: projeto.idprojeto
+    }
+
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.projetoTempoDominios, query)
+    .subscribe({
+      next: (value) => {
+        if(value.data && value.data instanceof Array) {
+          const infos = <TempoDominio[]>value.data
+          this.temposDominios = infos;
+          this.buildCharts();
+        }
+      },
+      error: (err) => {
+        console.log(err);
+
+        if(err.error.status && err.error.status == 'error') {
+          this.dialogService.config({
+            key: this.dialogKey, 
+            text: 'Não foi possível carregar os dados dos domínios.', 
+            title: 'Dados não encontrados',
+            type: 'message'
+          });
+        }
+      }
+    });
+  }
+
   buildCharts() {
+    const infos = this.temposDominios.sort((a, b) => Number(a.tempo) > Number(b.tempo) ? -1 : 1);
+    
     this.chartOptions = {
       series: [
         {
-          name: "basic",
-          data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+          name: "tempo",
+          data: infos.map(e => Number(e.tempo)).map(e => this.conversor.msToHour(e))
         }
       ],
       chart: {
@@ -65,20 +112,16 @@ export class TempoProjetoComponent implements OnInit{
         enabled: false
       },
       xaxis: {
-        categories: [
-          "South Korea",
-          "Canada",
-          "United Kingdom",
-          "Netherlands",
-          "Italy",
-          "France",
-          "Japan",
-          "United States",
-          "China",
-          "Germany"
-        ]
+        categories: infos.map(e => e.dominio)
       }
     };
+  }
+
+  getFullTime(): number {
+    if(this.temposDominios.length)
+    return this.temposDominios.map(e => Number(e.tempo)).reduce((p = 0, c) => p += c, 0);
+
+    return 0;
   }
 
   buildDias() {

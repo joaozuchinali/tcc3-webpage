@@ -64,8 +64,17 @@ export class LoginComponent implements OnInit{
     this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.getUsuario, infos)
     .subscribe({
       next: (value) => {
+        console.log(value);
+
         if(value.data && value.data instanceof Object) {
           this.configUser(<User>value.data);
+        } else {
+          this.dialogService.config({
+            key: this.dialogKey, 
+            title: 'Usuário não encontrado',
+            text: 'Verifique se as credências foram corretamente inseridas.', 
+            type: 'message'
+          });
         }
       },
       error: (err) => {
