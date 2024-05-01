@@ -1,7 +1,7 @@
 <div  
-    class="mb-1 ps-3 default-item-menu d-flex align-items-center"
+    class="mb-1 default-item-menu d-flex align-items-center"
     [ngClass]="{
-        'border border-start-0 border-end-0': (item.isfocus || item.current == true),
+        'border border-2 border-start-0 border-end-0 ': (item.isfocus || item.current == true),
         'bg-primary-subtle border-primary text-primary': (item.isfocus || item.current == true) && item.page != 'exit',
         'bg-danger-subtle border-danger text-danger': (item.isfocus || item.current == true) && item.page == 'exit',
     }"
@@ -10,10 +10,12 @@
     (mouseenter)="item.isfocus = true" 
     (mouseleave)="item.isfocus = false"
 >   
-    <div class="me-2">
+    <div style="width: 12.5%;" class="d-flex align-items-center justify-content-center">
         <fa-icon [icon]="[item.icon[0], item.icon[1]]"></fa-icon>
     </div>
-    <span>
-        {{item.nome}}
-    </span>
+    <div style="width: 87.5%;" class="ps-1 d-flex align-items-center justify-content-start">
+        <span>
+            {{item.nome}}
+        </span>
+    </div>
 </div>

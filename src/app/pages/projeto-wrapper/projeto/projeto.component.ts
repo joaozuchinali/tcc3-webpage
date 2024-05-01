@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrentProjetoService } from '../../../utils/current-projeto.service';
 import { NavbarItemProjeto } from '../../../interfaces/navbar-item-projeto';
+import { Projeto } from '../../../interfaces/projeto';
 
 @Component({
   selector: 'app-projeto',
@@ -11,6 +12,8 @@ import { NavbarItemProjeto } from '../../../interfaces/navbar-item-projeto';
 export class ProjetoComponent implements OnInit {
   identificador: string = '';
   dialogKey: string = 'di-projeto-atual';
+  projetoAtual: Projeto | null = null;
+  focusleave: boolean = false;
   
   itensNavBar: NavbarItemProjeto[] = [
     { text: 'Visão Geral', isclicked: false, path: 'visao-geral' },
@@ -27,7 +30,8 @@ export class ProjetoComponent implements OnInit {
 
   ngOnInit(): void {
     this.setId();
-    this.clickf(this.itensNavBar[0])
+    this.clickf(this.itensNavBar[0]);
+    this.projetoAtual = this.currentProjeto.get();
   }
 
   // Captura o id
@@ -51,5 +55,9 @@ export class ProjetoComponent implements OnInit {
 
   goback() {
     this.router.navigateByUrl('/main/projetos');
+  }
+
+  changeFocus(value: boolean) {
+    this.focusleave = value;
   }
 }

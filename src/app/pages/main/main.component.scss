@@ -19,3 +19,15 @@
 .hidden-scroll::-webkit-scrollbar {
     display: none; /* for Chrome, Safari, and Opera */      
 }
+
+
+.email-header-span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    overflow: hidden !important;
+}
+
+.pd-8px {
+    padding: 8px 8px;
+}

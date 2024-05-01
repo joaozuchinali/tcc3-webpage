@@ -1,9 +1,8 @@
-<div class="border bg-primary-subtle border-primary text-primary w-100 h-100 d-flex justify-content-center align-items-center rounded">
+<div class="border bg-primary-subtle border-primary text-primary w-100 h-100 d-flex justify-content-center align-items-center rounded" 
+     style="cursor: pointer;" (click)="showForm()">
     <div class="d-flex flex-column align-items-center">
         <div class="border border-primary bg-transparent text-primary rounded-circle d-flex justify-content-center align-items-center fs-3" 
-             style="width: 72px; height: 72px; cursor: pointer;"
-             (click)="showForm()"
-        >
+             style="width: 72px; height: 72px;">
             <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         </div>
 

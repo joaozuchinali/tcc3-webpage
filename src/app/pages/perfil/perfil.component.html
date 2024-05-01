@@ -23,25 +23,15 @@
                     <input class="form-control form-control-sm w-100" id="senha-acesso" type="password"  [(ngModel)]="senha">
                 </div>
             </div>
-            <!-- 
-            <div class="d-flex flex-row w-100">
-                <div class="form-group w-50 pe-2">
-                    <label style="font-size: 12px;" for="email-usuario">
-                        <b>E-mail:</b>
-                    </label>
-                    <input class="form-control form-control-sm w-100" id="email-usuario" type="email"  [(ngModel)]="email">
-                </div>
-            </div>
-            -->
         </div>
 
         <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center p-0">
-            <button class="btn btn-success btn-sm" (click)="confirmUpdate()">
+            <button class="btn bg-success-subtle text-success hoveredcls btn-sm" (click)="confirmUpdate()">
                 <fa-icon [icon]="['fas', 'rotate-right']" class="me-2"></fa-icon>
                 <span>Atualizar</span>
             </button>
 
-            <button class="btn btn-danger btn-sm" (click)="confirmDelete()">
+            <button class="btn bg-danger-subtle text-danger hoveredcls btn-sm" (click)="confirmDelete()">
                 <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
                 <span>Deletar perfil</span>
             </button>
