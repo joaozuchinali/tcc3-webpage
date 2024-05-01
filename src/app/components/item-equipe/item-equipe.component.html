@@ -16,7 +16,7 @@
     </div>
 
     <div class="d-flex flex-column align-items-stretch" *ngIf="editEquipe">
-        <div class="card mt-4">
+        <div class="card mt-4"  *ngIf="equipe.idcredencial == 2">
             <div class="card-body">
                 <div class="d-flex flex-column align-items-stretch">
                     <div class="form-group">
@@ -44,7 +44,7 @@
         <div class="d-flex flex-column align-items-stretch">
             <div class="card mt-4">
                 <div class="card-body">
-                    <div class="d-flex flex-row align-items-end">
+                    <div class="d-flex flex-row align-items-end" *ngIf="equipe.idcredencial == 2">
                         <div class="form-group">
                             <label style="font-size: 12px;" for="email-request-equipe">
                                 Adicionar participante a equipe:
@@ -56,6 +56,18 @@
                             <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
                             <span>Adicionar</span>
                         </button>
+                    </div>
+
+                    <div class="d-flex flex-row align-items-end w-100" *ngIf="equipe.idcredencial == 1">
+                        <div class="card w-100" *ngIf="users.length > 0">
+                            <div class="card-body">
+                                <div>
+                                    <b>
+                                        Você é um usuário observador, não tem permissão para editar.
+                                    </b>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="d-flex flex-column align-items-stretch mt-2">
@@ -80,7 +92,7 @@
                                                 <span style="font-size: 13.5px;"><b>E-mail:</b> {{user.email}}</span>
                                             </div>
                                             <div class="fs-6 text-danger bg-danger-subtle rounded text-danger hoveredcls d-flex align-items-center justify-content-center divbtn"
-                                                (click)="removeuserconfirm(user)">
+                                                (click)="removeuserconfirm(user)" *ngIf="equipe.idcredencial == 2">
                                                 <fa-icon [icon]="['fas', 'times']"></fa-icon>
                                             </div>
                                         </div>
