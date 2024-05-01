@@ -1,14 +1,15 @@
 <div class="d-flex flex-column align-items-stretch w-100 shadow-sm p-3 border border-light-subtle rounded mb-2">
 
     <div class="d-flex flex-row align-items-center justify-content-between">
-        <h5 [ngClass]="{'text-primary': focus, 'border border-top-0 border-end-0 border-start-0 border-bottom-3 border-primary': focus }" 
+        <h5 [ngClass]="{'text-primary': focus }" 
             (click)="verProjeto()"
+            class="mb-0"
             style="cursor: pointer;" (mouseleave)="changeFocus(false)" (mouseover)="changeFocus(true)">
             {{projeto.nome}} - {{projeto.identificador}}
         </h5>
 
-        <div class="fs-6 d-flex align-items-center justify-content-center text-white rounded bg-primary" 
-             style="cursor: pointer; width: 24px;" (click)="edit()">
+        <div class="fs-6 d-flex align-items-center justify-content-center rounded hoveredcls divbtn" (click)="edit()"
+             [ngClass]="{'text-primary bg-primary-subtle': !editProjeto, 'text-danger bg-danger-subtle': editProjeto}">
             <fa-icon [icon]="['fas', 'gear']"  *ngIf="!editProjeto"></fa-icon>
             <fa-icon [icon]="['fas', 'minus']" *ngIf="editProjeto"></fa-icon>
         </div>
@@ -16,30 +17,36 @@
 
     <div class="d-flex flex-column align-items-stretch" *ngIf="editProjeto">
         <div class="d-flex flex-column align-items-stretch">
-            <div class="d-flex flex-row">
-                <div class="form-group w-25 me-2">
-                    <label style="font-size: 12px;" for="nome-projeto">
-                        <b>Nome do Projeto:</b>
-                    </label>
-                    <input class="form-control form-control-sm w-100" id="nome-projeto" [(ngModel)]="nome">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div class="d-flex flex-row">
+                        <div class="form-group w-25 me-2">
+                            <label style="font-size: 12px;" for="nome-projeto">
+                                <b>Nome do Projeto:</b>
+                            </label>
+                            <input class="form-control form-control-sm w-100" id="nome-projeto" [(ngModel)]="nome">
+                        </div>
+            
+                        <div class="form-group w-25 me-2">
+                            <label style="font-size: 12px;" for="codigo-acesso">
+                                <b>Código de acesso:</b>
+                            </label>
+                            <input class="form-control form-control-sm w-100" id="codigo-acesso" digitOnly type="password" [(ngModel)]="codigoAcesso">
+                        </div>
+                    </div>
+        
+                    <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center">
+                        <button class="btn bg-success-subtle text-success btn-sm hoveredcls" (click)="atualzarconfirm()">
+                            <fa-icon [icon]="['fas', 'refresh']" class="me-2"></fa-icon>
+                            <span>Atualizar</span>
+                        </button>
+        
+                        <button class="btn bg-danger-subtle text-danger btn-sm hoveredcls" (click)="deletarconfirm()">
+                            <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
+                            <span>Excluir</span>
+                        </button>
+                    </div>
                 </div>
-    
-                <div class="form-group w-25 me-2">
-                    <label style="font-size: 12px;" for="codigo-acesso">
-                        <b>Código de acesso:</b>
-                    </label>
-                    <input class="form-control form-control-sm w-100" id="codigo-acesso" digitOnly type="password" [(ngModel)]="codigoAcesso">
-                </div>
-            </div>
-
-            <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center">
-                <button class="btn btn-success btn-sm" (click)="atualzarconfirm()">
-                    Atualizar
-                </button>
-
-                <button class="btn btn-danger btn-sm" (click)="deletarconfirm()">
-                    Excluir
-                </button>
             </div>
         </div>
     </div>

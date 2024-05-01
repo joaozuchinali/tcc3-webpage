@@ -2,11 +2,12 @@
     <!-- Título da página -->
     <div class="row border-bottom border-black sticky-top bg-white" style="height: 48px;">
         <div class="d-flex flex-row align-items-center h-100 w-100">
-            <button class="btn btn-white btn-sm me-2" (click)="goback()">
+            <button class="btn btn-white btn-sm me-2" (click)="goback()"  [ngClass]="{'text-primary': focusleave }"  
+                    (mouseleave)="changeFocus(false)" (mouseover)="changeFocus(true)">
                 <fa-icon [icon]="['fas', 'angles-left']"></fa-icon>
             </button>
             <h4>
-                {{identificador}}
+                {{projetoAtual?.nome}} ({{projetoAtual?.identificador}})
             </h4>
         </div>
     </div>

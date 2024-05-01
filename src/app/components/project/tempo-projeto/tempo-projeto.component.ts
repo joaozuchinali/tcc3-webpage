@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -27,13 +27,14 @@ import { ApiUrlsService } from '../../../utils/api-urls.service';
 import { TempoDominio } from '../../../interfaces/api/tempo-dominio';
 import { HttpRetorno } from '../../../interfaces/api/http-retorno';
 import { GetInfosByIdprojeto } from '../../../interfaces/api/get-infos-by-idprojeto';
+import { Observable, timer } from 'rxjs';
 
 @Component({
   selector: 'app-tempo-projeto',
   templateUrl: './tempo-projeto.component.html',
   styleUrl: './tempo-projeto.component.scss'
 })
-export class TempoProjetoComponent implements OnInit{
+export class TempoProjetoComponent implements OnInit, OnDestroy {
   public chartOptions: Partial<ChartOptions> | null = null;
 
   listaDiasTempo: DiasTempo[] = [];
@@ -42,6 +43,7 @@ export class TempoProjetoComponent implements OnInit{
 
   dataInicial: string = '';
   dataFinal: string = '';
+  timerProjeto: any;
   
   constructor(
     public conversor: ConversorService,
@@ -56,6 +58,7 @@ export class TempoProjetoComponent implements OnInit{
   ngOnInit(): void {
     this.getInfosDominioPorTempo();
     this.buildDias();
+    this.timerSet();
   }
 
   getInfosDominioPorTempo() {
@@ -86,6 +89,12 @@ export class TempoProjetoComponent implements OnInit{
           });
         }
       }
+    });
+  }
+
+  timerSet() {
+    this.timerProjeto = timer(20000, 20000).subscribe(() => {
+      this.getInfosDominioPorTempo();
     });
   }
 
@@ -130,5 +139,9 @@ export class TempoProjetoComponent implements OnInit{
       { data: '22/04/2024', dia: 'Dom', pesquisas: '33', total: 72383287, usuarios: '33'},
       { data: '22/04/2024', dia: 'Dom', pesquisas: '33', total: 72383287, usuarios: '33'}
     ]
+  }
+
+  ngOnDestroy(): void {
+    this.timerProjeto.unsubscribe();
   }
 }

@@ -1,84 +1,97 @@
 <div class="d-flex flex-column align-items-stretch w-100 shadow-sm p-3 border border-light-subtle rounded mb-2">
 
     <div class="d-flex flex-row align-items-center justify-content-between">
-        <h5 [ngClass]="{'text-primary': focus, 'border border-top-0 border-end-0 border-start-0 border-bottom-3 border-primary': focus }" 
+        <h5 [ngClass]="{'text-primary': focus }" 
             (click)="verProjetos()"
+            class="mb-0"
             style="cursor: pointer;" (mouseleave)="changeFocus(false)" (mouseover)="changeFocus(true)">
             {{equipe.nome}}
         </h5>
 
-        <div class="fs-6 d-flex align-items-center justify-content-center text-white rounded bg-primary" 
-             style="cursor: pointer; width: 24px;" (click)="editShow()">
+        <div class="fs-6 d-flex align-items-center justify-content-center rounded hoveredcls divbtn" (click)="editShow()"
+             [ngClass]="{'text-primary bg-primary-subtle': !editEquipe, 'text-danger bg-danger-subtle': editEquipe}">
             <fa-icon [icon]="['fas', 'gear']"  *ngIf="!editEquipe"></fa-icon>
             <fa-icon [icon]="['fas', 'minus']" *ngIf="editEquipe"></fa-icon>
         </div>
     </div>
 
     <div class="d-flex flex-column align-items-stretch" *ngIf="editEquipe">
-        <div class="d-flex flex-column align-items-stretch">
-            <div class="form-group">
-                <label style="font-size: 12px;" for="nome-equipe">
-                    <b>Nome da Equipe:</b>
-                </label>
-                <input class="form-control form-control-sm w-50" id="nome-equipe" [(ngModel)]="equipe.nome">
-            </div>
-
-            <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center">
-                <button class="btn btn-success btn-sm" (click)="updateequipeconfirm()">
-                    <fa-icon [icon]="['fas', 'refresh']" class="me-2"></fa-icon>
-                    <span>Atualizar</span>
-                </button>
-
-                <button class="btn btn-danger btn-sm" (click)="deleteequipeconfirm()">
-                    <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
-                    <span>Desabilitar</span>
-                </button>
+        <div class="card mt-4">
+            <div class="card-body">
+                <div class="d-flex flex-column align-items-stretch">
+                    <div class="form-group">
+                        <label style="font-size: 12px;" for="nome-equipe">
+                            <b>Nome da Equipe:</b>
+                        </label>
+                        <input class="form-control form-control-sm w-50" id="nome-equipe" [(ngModel)]="equipe.nome">
+                    </div>
+        
+                    <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center">
+                        <button class="btn bg-success-subtle text-success btn-sm hoveredcls" (click)="updateequipeconfirm()">
+                            <fa-icon [icon]="['fas', 'refresh']" class="me-2"></fa-icon>
+                            <span>Atualizar</span>
+                        </button>
+        
+                        <button class="btn bg-danger-subtle text-danger btn-sm hoveredcls" (click)="deleteequipeconfirm()">
+                            <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
+                            <span>Desabilitar</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="border border-start-0 border-end-0 border-top-0 border-bottom-3 border-black mt-2 mb-2"></div>
-
         <div class="d-flex flex-column align-items-stretch">
-
-            <div class="d-flex flex-row align-items-end">
-                <div class="form-group">
-                    <label style="font-size: 12px;" for="email-request-equipe">
-                        Adicionar participante ao projeto:
-                    </label>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div class="d-flex flex-row align-items-end">
+                        <div class="form-group">
+                            <label style="font-size: 12px;" for="email-request-equipe">
+                                Adicionar participante a equipe:
+                            </label>
+                            
+                            <input class="form-control form-control-sm" id="email-request-equipe" [(ngModel)]="emailAddPart">
+                        </div>
+                        <button class="btn bg-primary-subtle text-primary hoveredcls btn-sm ms-2" (click)="adicionarpartconfirm()">
+                            <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
+                            <span>Adicionar</span>
+                        </button>
+                    </div>
                     
-                    <input class="form-control form-control-sm" id="email-request-equipe" [(ngModel)]="emailAddPart">
-                </div>
-                <button class="btn btn-primary btn-sm ms-2" (click)="adicionarpartconfirm()">
-                    <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
-                    <span>Adicionar</span>
-                </button>
-            </div>
-            
-            <div class="d-flex flex-column align-items-stretch mt-2">
-                <div *ngIf="users.length == 0" 
-                     class="bg-body-secondary p-1 pe-2 border border-start-0 border-bottom-0 border-end-0 border-top-2 border-black d-flex flex-row align-items-center justify-content-between">
-                    <span style="font-size: 13.5px;">{{fallbacktext}}</span>
-                </div>
+                    <div class="d-flex flex-column align-items-stretch mt-2">
+                        <div *ngIf="users.length == 0" 
+                             class="p-1 pe-2 d-flex flex-row align-items-center justify-content-between">
+                            <span style="font-size: 13.5px;">{{fallbacktext}}</span>
+                        </div>
+        
+                        <div class="card" *ngIf="users.length > 0">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <b>
+                                        Participantes da equipe
+                                    </b>
+                                </div>
 
-                <div class="card" *ngIf="users.length > 0">
-                    <div class="card-body">
-                        <div *ngFor="let user of users; let i = index" class="card" [ngClass]="{'mt-2': i > 0}">
-                            <div class="card-body ">
-                                <div class="d-flex flex-row justify-content-between">
-                                    <!-- class="bg-body-tertiary p-2 pe-2 mb-2 shadow-sm rounded d-flex flex-row align-items-center justify-content-between" -->
-                                    <span style="font-size: 13.5px;">{{user.nome}} - {{user.email}}</span>
-                                    <div class="fs-6 text-danger bg-danger rounded text-white d-flex align-items-center justify-content-center" 
-                                        style="cursor: pointer; width: 24px;"
-                                        (click)="removeuserconfirm(user)">
-                                        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                <div *ngFor="let user of users; let i = index" class="card" [ngClass]="{'mt-2': i > 0}">
+                                    <div class="card-body ">
+                                        <div class="d-flex flex-row justify-content-between">
+                                            <div class="d-flex flex-column">
+                                                <span style="font-size: 13.5px;"><b>Nome:</b> {{user.nome}}</span>
+                                                <span style="font-size: 13.5px;"><b>E-mail:</b> {{user.email}}</span>
+                                            </div>
+                                            <div class="fs-6 text-danger bg-danger-subtle rounded text-danger hoveredcls d-flex align-items-center justify-content-center divbtn"
+                                                (click)="removeuserconfirm(user)">
+                                                <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
+
     </div>
 </div>

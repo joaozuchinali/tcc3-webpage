@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DialogCentralService } from '../../../utils/dialog-central.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlsService } from '../../../utils/api-urls.service';
@@ -7,13 +7,14 @@ import { HttpRetorno } from '../../../interfaces/api/http-retorno';
 import { ProjetoVisaoGeral } from '../../../interfaces/api/get-projeto-visao-geral';
 import { ConversorService } from '../../../utils/conversor.service';
 import { GetInfosByIdprojeto } from '../../../interfaces/api/get-infos-by-idprojeto';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-visao-projeto',
   templateUrl: './visao-projeto.component.html',
   styleUrl: './visao-projeto.component.scss'
 })
-export class VisaoProjetoComponent implements OnInit{
+export class VisaoProjetoComponent implements OnInit, OnDestroy {
 
   
   dialogKey: string = 'di-projeto-atual';
@@ -26,6 +27,7 @@ export class VisaoProjetoComponent implements OnInit{
     status_nome: '',
     time_navegacao: '0'
   };
+  timerVisao: any;
 
   constructor(
     private currentProject: CurrentProjetoService,
@@ -39,6 +41,7 @@ export class VisaoProjetoComponent implements OnInit{
 
   ngOnInit(): void {
     this.getVisaoGeral();
+    this.timerSet();
   }
 
   private getVisaoGeral() {
@@ -69,5 +72,15 @@ export class VisaoProjetoComponent implements OnInit{
         }
       }
     });
+  }
+
+  timerSet() {
+    this.timerVisao = timer(20000, 20000).subscribe(() => {
+      this.getVisaoGeral();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.timerVisao.unsubscribe();
   }
 }
