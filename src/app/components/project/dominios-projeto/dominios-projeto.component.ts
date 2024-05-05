@@ -4,10 +4,12 @@ import { CurrentProjetoService } from '../../../utils/current-projeto.service';
 import { DialogCentralService } from '../../../utils/dialog-central.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlsService } from '../../../utils/api-urls.service';
-import { ProjetoInfosDominio } from '../../../interfaces/api/get-projeto-infos-dominio';
+import { ProjetoInfosDominio, ProjetoInfosTopoDominio } from '../../../interfaces/api/get-projeto-infos-dominio';
 import { HttpRetorno } from '../../../interfaces/api/http-retorno';
 import { GetInfosByIdprojeto } from '../../../interfaces/api/get-infos-by-idprojeto';
 import { timer } from 'rxjs';
+import { OrdenadorService } from '../../../utils/ordenador.service';
+import { ControleFiltragem, Regrasfiltragem } from '../../../interfaces/regrasfiltragem';
 
 @Component({
   selector: 'app-dominios-projeto',
@@ -20,26 +22,81 @@ export class DominiosProjetoComponent implements OnInit, OnDestroy {
 
   dominiosList: ProjetoInfosDominio[] = [];
   dominiosListHtml: ProjetoInfosDominio[] = [];
+
+  topoList: ProjetoInfosTopoDominio[] = [];
+  topoListhtml: ProjetoInfosTopoDominio[] = []
+
   limite: string = '';
   ordenacao: string = '';
 
+  // Controle de ordenação dos domínios
+  ordenaDominiosList: ControleFiltragem = {
+    limite: '5',
+    indice: '0',
+    posFiltro: (lsi: any[]) => {
+      const ls = this.ordenador.sliceFunction(lsi, this.ordenaDominiosList.limite);
+      this.setDominios(ls);
+    },
+    filtra: () => {
+      const pos = this.ordenaDominiosList.regras[Number(this.ordenaDominiosList.indice)];
+      const lsi = this.ordenador.funcBuilder(this.dominiosList, pos.ordem, pos.key);
+      this.ordenaDominiosList.posFiltro(lsi);
+    },
+    regras: [
+      { label: 'Maior quantidade de pesquisas', indice: '0', ordem: 1, key: 'pesquisas' },
+      { label: 'Maior quantidade de usuários que acessaram', indice: '1', ordem: 1, key: 'usuarios' },
+      { label: 'Menor quantidade de pesquisas', indice: '2', ordem: 2, key: 'pesquisas' },
+      { label: 'Menor quantidade de usuários que acessaram', indice: '3', ordem: 2, key: 'usuarios' }
+    ]
+  }
+
+  // Controle de ordenação dos topos
+  ordenaToposList: ControleFiltragem = {
+    limite: '5',
+    indice: '0',
+    posFiltro: (lsi: any[]) => {
+      const ls = this.ordenador.sliceFunction(lsi, this.ordenaToposList.limite);
+      this.setTopos(ls);
+    },
+    filtra: () => {
+      const pos = this.ordenaToposList.regras[Number(this.ordenaToposList.indice)];
+      const lsi = this.ordenador.funcBuilder(this.topoList, pos.ordem, pos.key);
+      this.ordenaToposList.posFiltro(lsi);
+    },
+    regras: [
+      { label: 'Maior quantidade de pesquisas', indice: '0', ordem: 1, key: 'pesquisas' },
+      { label: 'Menor quantidade de pesquisas', indice: '1', ordem: 2, key: 'pesquisas' },
+    ]
+  }
+
+
   timerDominios: any;
+  reloadTime: string = '60';
   
   constructor(
     public conversor: ConversorService,
     private currentProject: CurrentProjetoService,
     private dialogService: DialogCentralService,
     private http: HttpClient,
-    private apiUrls: ApiUrlsService
+    private apiUrls: ApiUrlsService,
+    private ordenador: OrdenadorService
   ) {
 
   }
 
   ngOnInit(): void {
-    this.getDominios();
+    this.httpRequests();
     this.timerSet();
   }
 
+  // Centralizador de todas as requisições http do componente
+  // para a api, na busca das informações referentes ao domínio
+  httpRequests() {
+    this.getDominios();
+    this.getDominiosTopo();
+  }
+
+  // Retorna as informações referentes aos domínios no geral
   getDominios() {
     const projeto = this.currentProject.get();
     
@@ -53,11 +110,40 @@ export class DominiosProjetoComponent implements OnInit, OnDestroy {
         if(value.data && value.data instanceof Object) {
           const infos = (<ProjetoInfosDominio[]>value.data).map(e => {e.full = false; return e;});
           this.dominiosList = infos.map(e => e);
-          this.dominiosListHtml = infos.map(e => e);
+          // this.dominiosListHtml = infos.map(e => e);
+          this.changeOrder(this.ordenaDominiosList);
+        }
+      },
+      error: (err) => {
+        console.log(err);
 
-          if(this.ordenacao != '' || this.limite != '') {
-            this.changeOrder();
-          }
+        if(err.error.status && err.error.status == 'error') {
+          this.dialogService.config({
+            key: this.dialogKey, 
+            text: 'Não foi possível carregar os dados dos domínios.', 
+            title: 'Dados não encontrados',
+            type: 'message'
+          });
+        }
+      }
+    });
+  }
+
+  // Retorna as informações referentes ao domínio de topo
+  getDominiosTopo() {
+    const projeto = this.currentProject.get();
+    
+    const query: GetInfosByIdprojeto = {
+      idprojeto: projeto.idprojeto
+    }
+
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.projetoDominiosTopo, query)
+    .subscribe({
+      next: (value) => {
+        if(value.data && value.data instanceof Object) {
+          const infos = (<ProjetoInfosTopoDominio[]>value.data).map(e => {e.full = false; return e;});
+          this.topoList = infos.slice();
+          this.changeOrder(this.ordenaToposList);
         }
       },
       error: (err) => {
@@ -76,8 +162,16 @@ export class DominiosProjetoComponent implements OnInit, OnDestroy {
   }
 
   timerSet() {
-    this.timerDominios = timer(20000, 20000).subscribe(() => {
-      this.getDominios();
+    if(this.timerDominios && this.timerDominios.unsubscribe){
+      this.timerDominios.unsubscribe();
+    }
+
+    const step = Number(this.reloadTime);
+    if(step == -1)
+      return;
+
+    this.timerDominios = timer((step * 1000), (step * 1000)).subscribe(() => {
+      this.httpRequests();
     });
   }
 
@@ -85,55 +179,15 @@ export class DominiosProjetoComponent implements OnInit, OnDestroy {
     this.dominiosListHtml = dominios;
   }
 
-  changeOrder() {
-    const cod = this.ordenacao != '' ? Number(this.ordenacao) : 0;
-    let list = this.dominiosList.map(e => e);
-
-    switch (cod) {
-      // Maior por tempo
-      case 1:
-        list = list.sort((a, b) => Number(a.tempo) > Number(b.tempo) ? -1 : 1);
-        break;
-      // Maior por pesquisas
-      case 2:
-        list = list.sort((a, b) => Number(a.pesquisas) > Number(b.pesquisas) ? -1 : 1);
-        break;
-      // Maior por usuarios
-      case 3:
-        list = list.sort((a, b) => Number(a.usuarios) > Number(b.usuarios) ? -1 : 1);
-        break;
-      // Menor por tempo
-      case 4:
-        list = list.sort((a, b) => Number(a.tempo) > Number(b.tempo) ? 1 : -1);
-        break;
-      // Menor por pesquisa
-      case 5:
-        list = list.sort((a, b) => Number(a.pesquisas) > Number(b.pesquisas) ? 1 : -1);
-        break;
-      // Menor por usuário
-      case 6:
-        list = list.sort((a, b) => Number(a.pesquisas) > Number(b.pesquisas) ? 1 : -1);
-        break;
-      default:
-        break;
-    }
-
-    list = this.sliceDominios(list);
-    this.setDominios(list);
+  setTopos(dominios: ProjetoInfosTopoDominio[]) {
+    this.topoListhtml = dominios;
   }
 
-  sliceDominios(inputDominios: ProjetoInfosDominio[]) {
-    const sliceEnd = this.limite != '' ? Number(this.limite) : 0;
-    const dominios = inputDominios.map(e => e);
-
-    if(dominios.length < sliceEnd || sliceEnd == 0) {
-      return dominios.map(e => e);
-    } else {
-      return dominios.slice(0, sliceEnd).map(e => e);
-    }
+  changeOrder(vetorOrdenacao: ControleFiltragem) {
+    vetorOrdenacao.filtra();
   }
 
-  changeCard(item: ProjetoInfosDominio) {
+  changeCard(item: ProjetoInfosDominio | ProjetoInfosTopoDominio ) {
     item.full = !item.full;
   }
 

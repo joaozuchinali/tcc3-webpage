@@ -38,12 +38,19 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
   public chartOptions: Partial<ChartOptions> | null = null;
 
   listaDiasTempo: DiasTempo[] = [];
-  temposDominios: TempoDominio[] = [];
+  
   dialogKey: string = 'di-projeto-atual';
 
-  dataInicial: string = '';
-  dataFinal: string = '';
   timerProjeto: any;
+
+  temposDominios: TempoDominio[] = [];
+  temposDominiosHtml: TempoDominio[] = [];
+  
+  ordenacao: string = '1';
+  limite: string = '10';
+  reloadTime: string = '60';
+  showBy: string = '2';
+
   
   constructor(
     public conversor: ConversorService,
@@ -57,7 +64,7 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getInfosDominioPorTempo();
-    this.buildDias();
+    // this.buildDias();
     this.timerSet();
   }
 
@@ -73,8 +80,8 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
       next: (value) => {
         if(value.data && value.data instanceof Array) {
           const infos = <TempoDominio[]>value.data
-          this.temposDominios = infos;
-          this.buildCharts();
+          this.temposDominios = infos.slice();
+          this.changeOrder();
         }
       },
       error: (err) => {
@@ -93,19 +100,47 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
   }
 
   timerSet() {
-    this.timerProjeto = timer(20000, 20000).subscribe(() => {
+    if(this.timerProjeto && this.timerProjeto.unsubscribe){
+      this.timerProjeto.unsubscribe();
+    }
+
+    const step = Number(this.reloadTime);
+    if(step == -1)
+      return;
+
+    this.timerProjeto = timer((step * 1000), (step * 1000)).subscribe(() => {
       this.getInfosDominioPorTempo();
     });
   }
 
   buildCharts() {
-    const infos = this.temposDominios.sort((a, b) => Number(a.tempo) > Number(b.tempo) ? -1 : 1);
+    this.charTempoPorDominios();
+  }
+  charTempoPorDominios() {
+    const infos = this.temposDominiosHtml;
     
+    let mapped: number[] = [];
+    const cod = this.showBy != '' ? Number(this.showBy) : 1;
+    switch (cod) {
+      case 1:
+        mapped = infos.map(e => Number(e.tempo)).map(e => this.conversor.msToSeg(e));
+        break;
+      case 2:
+        mapped = infos.map(e => Number(e.tempo)).map(e => this.conversor.msToMin(e));
+        break;
+      case 3:
+        mapped = infos.map(e => Number(e.tempo)).map(e => this.conversor.msToHour(e));
+        break;
+      default:
+        mapped = infos.map(e => Number(e.tempo)).map(e => this.conversor.msToMin(e));
+        break;
+    }
+
     this.chartOptions = {
       series: [
         {
           name: "tempo",
-          data: infos.map(e => Number(e.tempo)).map(e => this.conversor.msToHour(e))
+          data: mapped
         }
       ],
       chart: {
@@ -143,5 +178,44 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.timerProjeto.unsubscribe();
+  }
+
+
+  setDominios(dominios: TempoDominio[]) {
+    this.temposDominiosHtml = dominios;
+    this.buildCharts();
+  }
+
+  changeOrder() {
+    const cod = this.ordenacao != '' ? Number(this.ordenacao) : 0;
+    let list = this.temposDominios.map(e => e);
+
+    switch (cod) {
+      // Maior por tempo
+      case 1:
+        list = list.sort((a, b) => Number(a.tempo) > Number(b.tempo) ? -1 : 1);
+        break;
+      // Menor por tempo
+      case 2:
+        list = list.sort((a, b) => Number(a.tempo) > Number(b.tempo) ? 1 : -1);
+        break;
+      default:
+        list = list.sort((a, b) => Number(a.tempo) > Number(b.tempo) ? -1 : 1);
+        break;
+    }
+
+    list = this.sliceDominios(list);
+    this.setDominios(list);
+  }
+
+  sliceDominios(inputDominios: TempoDominio[]) {
+    const sliceEnd = this.limite != '' ? Number(this.limite) : 0;
+    const dominios = inputDominios.map(e => e);
+
+    if(dominios.length < sliceEnd || sliceEnd == 0) {
+      return dominios.map(e => e);
+    } else {
+      return dominios.slice(0, sliceEnd).map(e => e);
+    }
   }
 }

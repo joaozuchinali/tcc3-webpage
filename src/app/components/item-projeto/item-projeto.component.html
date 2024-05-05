@@ -5,7 +5,8 @@
             (click)="verProjeto()"
             class="mb-0"
             style="cursor: pointer;" (mouseleave)="changeFocus(false)" (mouseover)="changeFocus(true)">
-            {{projeto.nome}} - {{projeto.identificador}}
+            {{projeto.nome}}
+            <!-- - {{projeto.identificador}} -->
         </h5>
 
         <div class="fs-6 d-flex align-items-center justify-content-center rounded hoveredcls divbtn" (click)="edit()"
@@ -17,6 +18,36 @@
 
     <div class="d-flex flex-column align-items-stretch" *ngIf="editProjeto">
         <div class="d-flex flex-column align-items-stretch">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div class="card-title">
+                        <b>
+                            Credênciais de acesso do projeto
+                        </b>
+                    </div>
+
+                    <div class="d-flex flex-column">
+                        <div class="d-flex flex-row p-2 align-items-center" (click)="copiarValor(projeto.identificador, copyTags[1])">
+                            <div class="fs-6 d-flex align-items-center justify-content-center rounded hoveredcls divbtn text-primary bg-primary-subtle me-2" 
+                                 title="Copiar"
+                                 [ngClass]="{'text-primary bg-primary-subtle': copyValues[copyTags[1]] == false, 'text-success bg-success-subtle': copyValues[copyTags[1]] == true}">
+                                <fa-icon [icon]="['fas', 'file']"></fa-icon>
+                            </div>
+                            <span style="font-size: 15px;"><b>Identificador:</b> {{projeto.identificador}}</span>
+                        </div>
+
+                        <div class="d-flex flex-row p-2 align-items-center" (click)="copiarValor(projeto.codigo, copyTags[2])">
+                            <div class="fs-6 d-flex align-items-center justify-content-center rounded hoveredcls divbtn me-2" 
+                                 title="Copiar"
+                                 [ngClass]="{'text-primary bg-primary-subtle': copyValues[copyTags[2]] == false, 'text-success bg-success-subtle': copyValues[copyTags[2]] == true}">
+                                <fa-icon [icon]="['fas', 'file']"></fa-icon>
+                            </div>
+                            <span style="font-size: 15px;"><b>Código de acesso:</b> {{projeto.codigo}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="d-flex flex-row">
