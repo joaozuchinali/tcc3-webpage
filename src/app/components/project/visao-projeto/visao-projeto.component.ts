@@ -21,10 +21,10 @@ export class VisaoProjetoComponent implements OnInit, OnDestroy {
 
   visaoGeral: ProjetoVisaoGeral = {
     dominios_count: 0, 
-    equipe_nome: '', 
+    equipe_nome: 'Carregando...', 
     uso_pesquisados: 0, 
     registros_count: 0,
-    status_nome: '',
+    status_nome: 'Carregando...',
     time_navegacao: '0'
   };
   timerVisao: any;
@@ -70,6 +70,15 @@ export class VisaoProjetoComponent implements OnInit, OnDestroy {
             type: 'message'
           });
         }
+
+        this.visaoGeral = {
+          dominios_count: 0, 
+          equipe_nome: 'Não carregado', 
+          uso_pesquisados: 0, 
+          registros_count: 0,
+          status_nome: 'Não carregado',
+          time_navegacao: '0'
+        };
       }
     });
   }

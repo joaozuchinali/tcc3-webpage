@@ -21,7 +21,7 @@
                             <label style="font-size: 12px;" for="nr-limite">
                                 <b>Recarregar a cada:</b>
                             </label>
-                            <select class="form-control form-control-sm w-100" id="nr-limite" [(ngModel)]="reloadTime" (change)="timerSet()">
+                            <select class="form-control form-control-sm w-100" [(ngModel)]="reloadTime" (change)="timerSet()">
                                 <option value="30">30 segundos</option>
                                 <option value="60" [selected]="true">1 minuto</option>
                                 <option value="120">2 minutos</option>
@@ -40,7 +40,7 @@
                             <span class="fs-6"><b>Domínios por tempo:</b> </span>
                         </div>
 
-                        <div class="d-flex flex-row">
+                        <div class="d-flex flex-row" *ngIf="temposDominios.length">
                             <div class="w-50 d-flex flex-row">
                                 <div class="form-group w-50 me-2">
                                     <label style="font-size: 12px;" for="ordenacao">
@@ -60,7 +60,7 @@
                                     <label style="font-size: 12px;" for="nr-limite">
                                         <b>Limite:</b>
                                     </label>
-                                    <select class="form-control form-control-sm w-100" id="nr-limite" [(ngModel)]="limite" (change)="changeOrder()">
+                                    <select class="form-control form-control-sm w-100" [(ngModel)]="limite" (change)="changeOrder()">
                                         <option value="5">5 registros</option>
                                         <option value="10" [selected]="true">10 registros</option>
                                         <option value="20">20 registros</option>
@@ -74,13 +74,13 @@
                             </div>
                         </div>
 
-                        <div class="d-flex flex-row">
-                            <div class="w-50 d-flex flex-row">
-                                <div class="form-group w-50 me-2">
+                        <div class="d-flex flex-row" *ngIf="temposDominios.length">
+                            <div class="w-25 d-flex flex-row">
+                                <div class="form-group w-100 me-2">
                                     <label style="font-size: 12px;" for="nr-limite">
                                         <b>Mostrar por:</b>
                                     </label>
-                                    <select class="form-control form-control-sm w-100" id="nr-limite" [(ngModel)]="showBy" (change)="charTempoPorDominios()">
+                                    <select class="form-control form-control-sm w-100" [(ngModel)]="showBy" (change)="charTempoPorDominios()">
                                         <option value="1">segundos</option>
                                         <option value="2" [selected]="true">minutos</option>
                                         <option value="3">Horas</option>
@@ -90,7 +90,7 @@
                         </div>
                     </div>
 
-                    <div class="p-3 w-100">
+                    <div class="p-3 w-100" *ngIf="temposDominios.length">
                         <apx-chart *ngIf="chartOptions"
                             [series]="chartOptions.series!"
                             [chart]="chartOptions.chart!"
@@ -98,6 +98,18 @@
                             [plotOptions]="chartOptions.plotOptions!"
                             [xaxis]="chartOptions.xaxis!"
                         ></apx-chart>
+                    </div>
+
+                    <div class="d-flex flex-column w-100 p-3" *ngIf="!temposDominios.length">
+                        <div class="card mt-3">
+                            <div class="card-body" >
+                                <div class="d-flex flex-row">
+                                    <span class="pe-2">
+                                        Sem registros.
+                                    </span>
+                                </div> 
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

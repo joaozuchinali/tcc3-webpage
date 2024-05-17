@@ -15,6 +15,7 @@ import { ProjetoCreate } from '../../../interfaces/api/projeto-create';
 import { ProjetoGetByUser } from '../../../interfaces/api/projeto-get-by-user';
 import { ProjetoGetByEquipe } from '../../../interfaces/api/projeto-get-by-equipe';
 import { ListProjetosService } from '../../../utils/list-projetos.service';
+import { ShowLoadingService } from '../../../utils/show-loading.service';
 
 @Component({
   selector: 'app-projetos',
@@ -36,6 +37,7 @@ export class ProjetosComponent implements OnInit{
   projetosAtuais: Projeto[] = [];
 
   dialogKey = 'di-projetos';
+  loadingKey = 'lo-projetos';
 
   constructor(
     private router: Router,
@@ -46,7 +48,8 @@ export class ProjetosComponent implements OnInit{
     private dialogService: DialogCentralService,
     private http: HttpClient,
     private listProjeto: ListProjetosService,
-    private apiUrls: ApiUrlsService
+    private apiUrls: ApiUrlsService,
+    private showLoadingService: ShowLoadingService
   ) {
 
   }
@@ -151,6 +154,8 @@ export class ProjetosComponent implements OnInit{
     }, () => { this.adicionarProjeto() });
   }
   adicionarProjeto() {
+    this.showLoadingService.show.next({key: this.loadingKey});
+
     const projeto: Projeto = {
       codigo: Number(this.codigoAcesso),
       identificador: '',
@@ -168,11 +173,12 @@ export class ProjetosComponent implements OnInit{
     this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.createProjeto, infos)
     .subscribe({
       next: (value) => {
-        console.log(value);
         if(value.data && value.data instanceof Object && value.status == 'success') {
           this.clearFields();
           this.projetosLoad();
         }
+
+        this.showLoadingService.hide.next({key: this.loadingKey});
       },
       error: (err) => {
         console.log(err);
@@ -184,6 +190,8 @@ export class ProjetosComponent implements OnInit{
             type: 'message'
           });
         }
+
+        this.showLoadingService.hide.next({key: this.loadingKey});
       }
     });
   }

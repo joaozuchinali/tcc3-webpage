@@ -24,6 +24,7 @@ import { DominiosProjetoComponent } from './components/project/dominios-projeto/
 import { TempoProjetoComponent } from './components/project/tempo-projeto/tempo-projeto.component';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { HttpClientModule } from '@angular/common/http';
+import { LoadingcompComponent } from './components/loadingcomp/loadingcomp.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { HttpClientModule } from '@angular/common/http';
     DialogcompComponent,
     BlockedComponent,
     DominiosProjetoComponent,
-    TempoProjetoComponent
+    TempoProjetoComponent,
+    LoadingcompComponent
   ],
   imports: [
     BrowserModule,
