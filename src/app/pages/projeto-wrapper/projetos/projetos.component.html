@@ -21,53 +21,57 @@
     <!-- Criação de um novo projeto -->
     <div class="row p-1 mb-2 mt-2" *ngIf="adicionandoProjeto == true">
         <div class="col-md-12 p-0">
-            <div class="d-flex flex-row w-100">
-                <div class="form-group w-25 me-2">
-                    <label style="font-size: 12px;" for="nome-projeto">
-                        <b>Nome do Projeto:</b>
-                    </label>
-                    <input class="form-control form-control-sm w-100" id="nome-projeto" [(ngModel)]="nome">
-                </div>
-    
-                <div class="form-group w-25 me-2">
-                    <label style="font-size: 12px;" for="codigo-acesso">
-                        <b>Código de acesso:</b>
-                    </label>
-                    <input class="form-control form-control-sm w-100" id="codigo-acesso" type="password" digitOnly [(ngModel)]="codigoAcesso">
-                </div>
-
-                <div class="form-group w-25 me-2">
-                    <label style="font-size: 12px;" for="equipe-projeto">
-                        <b>Equipe do projeto:</b>
-                    </label>
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-row w-100">
+                        <div class="form-group w-25 me-2">
+                            <label style="font-size: 12px;" for="nome-projeto">
+                                <b>Nome do Projeto:</b>
+                            </label>
+                            <input class="form-control form-control-sm w-100" id="nome-projeto" [(ngModel)]="nome">
+                        </div>
+            
+                        <div class="form-group w-25 me-2">
+                            <label style="font-size: 12px;" for="codigo-acesso">
+                                <b>Código de acesso:</b>
+                            </label>
+                            <input class="form-control form-control-sm w-100" id="codigo-acesso" type="text" maxlength="6" digitOnly [(ngModel)]="codigoAcesso">
+                        </div>
+        
+                        <div class="form-group w-25 me-2">
+                            <label style="font-size: 12px;" for="equipe-projeto">
+                                <b>Equipe do projeto:</b>
+                            </label>
+                            
+                            <select class="form-control form-control-sm w-100" id="equipe-projeto" 
+                                    [(ngModel)]="idequipe" [disabled]="disableSelectEquipe"
+                                    (change)="verificaCredencialEquipe()">
+                                <option *ngFor="let item of equipesSelect" [value]="item.idequipe">
+                                    {{item.nome}}
+                                </option>
+                            </select> 
+                           
+                        </div>
+                    </div>
                     
-                    <select class="form-control form-control-sm w-100" id="equipe-projeto" 
-                            [(ngModel)]="idequipe" [disabled]="disableSelectEquipe"
-                            (change)="verificaCredencialEquipe()">
-                        <option *ngFor="let item of equipesSelect" [value]="item.idequipe">
-                            {{item.nome}}
-                        </option>
-                    </select> 
-                   
+                    <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center p-0">
+                        <!-- Controle de visibilidade para adição do projeto -->
+                        <button class="btn bg-success-subtle text-success hoveredcls btn-sm" (click)="addprojetoconfirm()" *ngIf="!disableCreateProjeto">
+                            <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
+                            <span>Adicionar projeto</span>
+                        </button>
+                        <button class="btn  bg-danger-subtle text-danger hoveredcls btn-sm" *ngIf="disableCreateProjeto">
+                            <fa-icon [icon]="['fas', 'minus']" class="me-2"></fa-icon>
+                            <span>Não autorizado a adicionar projetos</span>
+                        </button>
+            
+                        <button class="btn  bg-danger-subtle text-danger hoveredcls btn-sm" (click)="cancelarProjeto()">
+                            <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
+                            <span>Retornar</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center p-0">
-            <!-- Controle de visibilidade para adição do projeto -->
-            <button class="btn btn-success btn-sm" (click)="addprojetoconfirm()" *ngIf="!disableCreateProjeto">
-                <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
-                <span>Adicionar projeto</span>
-            </button>
-            <button class="btn btn-danger btn-sm" *ngIf="disableCreateProjeto">
-                <fa-icon [icon]="['fas', 'minus']" class="me-2"></fa-icon>
-                <span>Não autorizado a adicionar projetos</span>
-            </button>
-
-            <button class="btn btn-danger btn-sm" (click)="cancelarProjeto()">
-                <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
-                <span>Retornar</span>
-            </button>
         </div>
     </div>
 
@@ -79,4 +83,6 @@
     </div>
 
     <app-dialogcomp [key]="dialogKey"></app-dialogcomp>
+
+    <app-loadingcomp [key]="loadingKey"></app-loadingcomp>
 </div>

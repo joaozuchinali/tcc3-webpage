@@ -21,6 +21,18 @@ export class ConversorService {
     return hours + "h " + minutes + "m " + seconds + "s";
   }
 
+  msToSeg(dInput: number | string): number {
+    let duration = Number(dInput);
+
+    return Number((duration / 1000).toFixed(2));
+  }
+
+  msToMin(dInput: number | string): number {
+    let duration = Number(dInput);
+
+    return Number((duration / (1000 * 60)).toFixed(3));
+  }
+
   msToHour(dInput: number | string): number {
     let duration = Number(dInput);
 

@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpRetorno } from '../../interfaces/api/http-retorno';
 import { ApiUrlsService } from '../../utils/api-urls.service';
 import { User } from '../../interfaces/user';
+import { ShowLoadingService } from '../../utils/show-loading.service';
 
 @Component({
   selector: 'app-perfil',
@@ -19,6 +20,7 @@ export class PerfilComponent implements OnInit {
   email: string = '';
 
   dialogKey = 'di-perfil';
+  loadingKey = 'lo-perfil';
 
   constructor(
     private router: Router,
@@ -26,7 +28,8 @@ export class PerfilComponent implements OnInit {
     private currentUser: CurrentUserService,
     private dialogService: DialogCentralService,
     private http: HttpClient,
-    private apiUrls: ApiUrlsService
+    private apiUrls: ApiUrlsService,
+    private showLoadingService: ShowLoadingService
   ) { }
 
   ngOnInit(): void {
@@ -66,6 +69,8 @@ export class PerfilComponent implements OnInit {
   }
 
   updateUser() {
+    this.showLoadingService.show.next({key: this.loadingKey});
+
     const user = this.currentUser.get();
     user.senha = this.senha;
     user.nome  = this.nome;
@@ -87,6 +92,8 @@ export class PerfilComponent implements OnInit {
             type: 'message'
           });
         }
+
+        this.showLoadingService.hide.next({key: this.loadingKey});
       },
       error: (err) => {
         console.log(err);
@@ -98,6 +105,8 @@ export class PerfilComponent implements OnInit {
             type: 'message'
           });
         }
+
+        this.showLoadingService.hide.next({key: this.loadingKey});
       }
     });
   }
@@ -115,6 +124,7 @@ export class PerfilComponent implements OnInit {
   
   deletar(): void {
     console.log('Deletando usuário...');
+    this.showLoadingService.show.next({key: this.loadingKey});
     const user = this.currentUser.get();
 
     console.log(user);
@@ -125,6 +135,8 @@ export class PerfilComponent implements OnInit {
         if(value.data && value.data instanceof Object && value.data.idstatus == 2) {
           this.router.navigateByUrl('/login');
         }
+
+        this.showLoadingService.hide.next({key: this.loadingKey});
       },
       error: (err) => {
         console.log(err);
@@ -136,6 +148,8 @@ export class PerfilComponent implements OnInit {
             type: 'message'
           });
         }
+
+        this.showLoadingService.hide.next({key: this.loadingKey});
       }
     });
   }

@@ -18,6 +18,21 @@ import { ProjetoDelete } from '../../interfaces/api/projeto-delete';
 export class ItemProjetoComponent implements OnInit{
   @Input('projeto') projeto: Projeto = {codigo: -1, identificador: '', idequipe: -1, idprojeto: -1, idstatus: -1, nome: ''}
 
+  copyTags = {
+    1: 'identificador',
+    2: 'codigo'
+  };
+  copyValues = {
+    [this.copyTags[1]]: false,
+    [this.copyTags[2]]: false
+  };
+  timeCopy: {
+    [x: string]: any
+  } = {
+    [this.copyTags[1]]: null,
+    [this.copyTags[2]]: null
+  };
+
   editProjeto: boolean = false;
   focus: boolean = false;
 
@@ -137,5 +152,21 @@ export class ItemProjetoComponent implements OnInit{
         }
       }
     });
+  }
+
+  copiarValor(valor: string | number, key: string) {
+    let copyValue = String(valor);
+
+    navigator.clipboard.writeText(copyValue).catch(() => {
+      console.error("Unable to copy text");
+    });
+
+    if(this.timeCopy[key]) {
+      clearTimeout(this.timeCopy[key]);
+    }
+    this.timeCopy[key] = setTimeout(() => {
+      this.copyValues[key] = false
+    }, 2000);
+    this.copyValues[key] = true;
   }
 }

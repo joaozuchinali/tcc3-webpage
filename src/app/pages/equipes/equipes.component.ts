@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiUrlsService } from '../../utils/api-urls.service';
 import { HttpRetorno } from '../../interfaces/api/http-retorno';
 import { ListEquipesService } from '../../utils/list-equipes.service';
+import { ShowLoadingService } from '../../utils/show-loading.service';
 
 @Component({
   selector: 'app-equipes',
@@ -22,6 +23,7 @@ export class EquipesComponent implements OnInit{
   equipes: Equipe[] = []
   
   dialogKey = 'di-equipes';
+  loadingKey = 'lo-equipes';
 
   constructor(
     private addequipe: AddEquipeService,
@@ -29,7 +31,8 @@ export class EquipesComponent implements OnInit{
     private dialogService: DialogCentralService,
     private http: HttpClient,
     private apiUrls: ApiUrlsService,
-    private listEquipe: ListEquipesService
+    private listEquipe: ListEquipesService,
+    private showLoadingService: ShowLoadingService
   ) {
 
   }
@@ -72,6 +75,8 @@ export class EquipesComponent implements OnInit{
   }
   // Cria uma nova equipe
   postEquipe(infos: Equipe) {
+    this.showLoadingService.show.next({key: this.loadingKey});
+
     this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.createEquipe, infos)
     .subscribe({
       next: (value) => {
@@ -84,7 +89,7 @@ export class EquipesComponent implements OnInit{
             idusuario: usuario.idusuario
           };
 
-          this.postEquipeUso(equipeUso)
+          this.postEquipeUso(equipeUso);
         }
       },
       error: (err) => {
@@ -97,6 +102,8 @@ export class EquipesComponent implements OnInit{
             type: 'message'
           });
         }
+
+        this.showLoadingService.hide.next({key: this.loadingKey});
       }
     });
   }
@@ -110,6 +117,8 @@ export class EquipesComponent implements OnInit{
           this.clearFields();
           this.getEquipes();
         }
+
+        this.showLoadingService.hide.next({key: this.loadingKey});
       },
       error: (err) => {
         console.log(err);
@@ -121,6 +130,8 @@ export class EquipesComponent implements OnInit{
             type: 'message'
           });
         }
+
+        this.showLoadingService.hide.next({key: this.loadingKey});
       }
     });
   }

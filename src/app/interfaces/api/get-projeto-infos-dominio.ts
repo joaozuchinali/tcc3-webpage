@@ -5,3 +5,9 @@ export interface ProjetoInfosDominio {
     usuarios: number;
     full?: boolean;
 }
+
+export interface ProjetoInfosTopoDominio {
+    topo: string;
+    pesquisas: number;
+    full?: boolean;
+}

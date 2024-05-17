@@ -16,24 +16,30 @@
     <!-- Criação de um nova equipe -->
     <div class="row p-1 mb-2 mt-2" *ngIf="adicionandoEquipe == true">
         <div class="col-md-12 p-0">
-            <div class="form-group">
-                <label style="font-size: 12px;" for="nome-equipe">
-                    <b>Nome da Equipe:</b>
-                </label>
-                <input class="form-control form-control-sm w-50" id="nome-equipe" [(ngModel)]="nomeEquipe">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-row">
+                        <div class="form-group w-25 me-2">
+                            <label style="font-size: 12px;" for="nome-equipe">
+                                <b>Nome da Equipe:</b>
+                            </label>
+                            <input class="form-control form-control-sm w-100" id="nome-equipe" [(ngModel)]="nomeEquipe">
+                        </div>
+                    </div>
+            
+                    <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center p-0">
+                        <button class="btn bg-success-subtle text-success btn-sm hoveredcls" (click)="adicionarEquipe()">
+                            <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
+                            <span>Adicionar equipe</span>
+                        </button>
+            
+                        <button class="btn bg-danger-subtle text-danger btn-sm hoveredcls" (click)="cancelarAdd()">
+                            <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
+                            <span>Retornar</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="d-grid gap-2 mt-2 d-flex flex-row justify-content-start align-items-center p-0">
-            <button class="btn btn-success btn-sm" (click)="adicionarEquipe()">
-                <fa-icon [icon]="['fas', 'plus']" class="me-2"></fa-icon>
-                <span>Adicionar equipe</span>
-            </button>
-
-            <button class="btn btn-danger btn-sm" (click)="cancelarAdd()">
-                <fa-icon [icon]="['fas', 'times']" class="me-2"></fa-icon>
-                <span>Retornar</span>
-            </button>
         </div>
     </div>
 
@@ -46,4 +52,5 @@
     </div>
 
     <app-dialogcomp [key]="dialogKey"></app-dialogcomp>
+    <app-loadingcomp [key]="loadingKey"></app-loadingcomp>
 </div>

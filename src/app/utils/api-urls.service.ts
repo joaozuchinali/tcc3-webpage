@@ -29,6 +29,7 @@ export class ApiUrlsService {
 
   readonly projetoVisaoGeral: string = 'registros/visaogeral/';
   readonly projetoDominios: string = 'registros/infosdominio/';
+  readonly projetoDominiosTopo: string = 'registros/infosdominioext/';
   readonly projetoTempoDominios: string = 'registros/tempodominio/'
 
   constructor(
