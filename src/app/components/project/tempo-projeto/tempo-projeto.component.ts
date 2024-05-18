@@ -5,11 +5,9 @@ import {
   ChartComponent,
   ApexDataLabels,
   ApexXAxis,
-  ApexPlotOptions,
-  ApexTitleSubtitle,
-  ApexStroke
+  ApexPlotOptions
 } from "ng-apexcharts";
-import { DiasTempo } from '../../../interfaces/dias-tempo';
+import { DiasTempo, DiasTempoHTTP } from '../../../interfaces/dias-tempo';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -28,6 +26,8 @@ import { TempoDominio } from '../../../interfaces/api/tempo-dominio';
 import { HttpRetorno } from '../../../interfaces/api/http-retorno';
 import { GetInfosByIdprojeto } from '../../../interfaces/api/get-infos-by-idprojeto';
 import { Observable, timer } from 'rxjs';
+import { ControleFiltragem } from '../../../interfaces/regrasfiltragem';
+import { OrdenadorService } from '../../../utils/ordenador.service';
 
 @Component({
   selector: 'app-tempo-projeto',
@@ -38,36 +38,59 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
   public chartOptions: Partial<ChartOptions> | null = null;
 
   listaDiasTempo: DiasTempo[] = [];
+listaDiasTempoHtml: DiasTempo[] = [];
   
+  temposDominios: TempoDominio[] = [];
+  temposDominiosHtml: TempoDominio[] = [];
+
   dialogKey: string = 'di-projeto-atual';
 
   timerProjeto: any;
-
-  temposDominios: TempoDominio[] = [];
-  temposDominiosHtml: TempoDominio[] = [];
   
-  ordenacao: string = '1';
-  limite: string = '10';
   reloadTime: string = '60';
   showBy: string = '2';
 
+  dataInicial: string = '';
+  dataFinal: string = '';
+
+  // Controle de ordenação dos domínios
+  ordenaTempoList: ControleFiltragem = {
+    limite: '5',
+    indice: '0',
+    posFiltro: (lsi: any[]) => {
+      const ls = this.ordenador.sliceFunction(lsi, this.ordenaTempoList.limite);
+      this.setDominios(ls);
+    },
+    filtra: () => {
+      const pos = this.ordenaTempoList.regras[Number(this.ordenaTempoList.indice)];
+      const lsi = this.ordenador.funcBuilder(this.temposDominios, pos.ordem, pos.key);
+      this.ordenaTempoList.posFiltro(lsi);
+    },
+    regras: [
+      { label: 'Maior tempo de navegação', indice: '0', ordem: 1, key: 'tempo' },
+      { label: 'Menor tempo de navegação', indice: '1', ordem: 2, key: 'tempo' }
+    ]
+  }
   
   constructor(
     public conversor: ConversorService,
     private currentProject: CurrentProjetoService,
     private dialogService: DialogCentralService,
     private http: HttpClient,
-    private apiUrls: ApiUrlsService
+    private apiUrls: ApiUrlsService,
+    private ordenador: OrdenadorService
   ) {
     
   }
 
   ngOnInit(): void {
     this.getInfosDominioPorTempo();
-    // this.buildDias();
+    this.getInfosDominioPorDia();
     this.timerSet();
+    this.setDatasIniciais();
   }
 
+  // retorna as informações de tempo por domínio pesquisado
   getInfosDominioPorTempo() {
     const projeto = this.currentProject.get();
     
@@ -81,7 +104,7 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
         if(value.data && value.data instanceof Array) {
           const infos = <TempoDominio[]>value.data
           this.temposDominios = infos.slice();
-          this.changeOrder();
+          this.changeOrder(this.ordenaTempoList);
         }
       },
       error: (err) => {
@@ -91,6 +114,38 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
           this.dialogService.config({
             key: this.dialogKey, 
             text: 'Não foi possível carregar os dados dos domínios.', 
+            title: 'Dados não encontrados',
+            type: 'message'
+          });
+        }
+      }
+    });
+  }
+
+  // retorna as informações de tempo por dia pesquisado
+  getInfosDominioPorDia() {
+    const projeto = this.currentProject.get();
+    
+    const query: GetInfosByIdprojeto = {
+      idprojeto: projeto.idprojeto
+    }
+
+    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.projetoTempoDia, query)
+    .subscribe({
+      next: (value) => {
+        if(value.data && value.data instanceof Array) {
+          const infos = <DiasTempoHTTP[]>value.data
+          this.buildDias(infos);
+          this.setDiasTempo();
+        }
+      },
+      error: (err) => {
+        console.log(err);
+
+        if(err.error.status && err.error.status == 'error') {
+          this.dialogService.config({
+            key: this.dialogKey, 
+            text: 'Não foi possível carregar os dados dos dias pesquisados.', 
             title: 'Dados não encontrados',
             type: 'message'
           });
@@ -110,6 +165,7 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
 
     this.timerProjeto = timer((step * 1000), (step * 1000)).subscribe(() => {
       this.getInfosDominioPorTempo();
+      this.getInfosDominioPorDia();
     });
   }
 
@@ -168,12 +224,19 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
     return 0;
   }
 
-  buildDias() {
-    this.listaDiasTempo = [
-      { data: '22/04/2024', dia: 'Dom', pesquisas: '33', total: 72383287, usuarios: '33'},
-      { data: '22/04/2024', dia: 'Dom', pesquisas: '33', total: 72383287, usuarios: '33'},
-      { data: '22/04/2024', dia: 'Dom', pesquisas: '33', total: 72383287, usuarios: '33'}
-    ]
+  buildDias(vetor: DiasTempoHTTP[]) {
+    const vetorShow = vetor.map((e) => {
+      const diavec = e.diap.split('-').map(e => Number(e));
+      const diaaux = new Date(diavec[0], diavec[1] - 1, diavec[2], 0, 0, 0, 0);
+
+      return {
+        data: e.diap.split('-').reverse().join('/'),
+        dia: this.conversor.weekDayToAbrev(diaaux.getDay()),
+        total: Number(e.tempodia)
+      }
+    });
+    
+    this.listaDiasTempo = vetorShow;
   }
 
   ngOnDestroy(): void {
@@ -186,36 +249,33 @@ export class TempoProjetoComponent implements OnInit, OnDestroy {
     this.buildCharts();
   }
 
-  changeOrder() {
-    const cod = this.ordenacao != '' ? Number(this.ordenacao) : 0;
-    let list = this.temposDominios.map(e => e);
+  setDiasTempo() {
+    console.log(this.dataFinal);
+    console.log(this.dataInicial);
 
-    switch (cod) {
-      // Maior por tempo
-      case 1:
-        list = list.sort((a, b) => Number(a.tempo) > Number(b.tempo) ? -1 : 1);
-        break;
-      // Menor por tempo
-      case 2:
-        list = list.sort((a, b) => Number(a.tempo) > Number(b.tempo) ? 1 : -1);
-        break;
-      default:
-        list = list.sort((a, b) => Number(a.tempo) > Number(b.tempo) ? -1 : 1);
-        break;
-    }
+    this.listaDiasTempoHtml = this.listaDiasTempo.filter(e => {
+      console.log(e);
+      if (
+          e.data.split('/').reverse().join('-') >= this.dataInicial && 
+          e.data.split('/').reverse().join('-') <= this.dataFinal
+        )
+      return true;
 
-    list = this.sliceDominios(list);
-    this.setDominios(list);
+      return false;
+    });
   }
 
-  sliceDominios(inputDominios: TempoDominio[]) {
-    const sliceEnd = this.limite != '' ? Number(this.limite) : 0;
-    const dominios = inputDominios.map(e => e);
+  changeOrder(vetorOrdenacao: ControleFiltragem) {
+    vetorOrdenacao.filtra();
+  }
 
-    if(dominios.length < sliceEnd || sliceEnd == 0) {
-      return dominios.map(e => e);
-    } else {
-      return dominios.slice(0, sliceEnd).map(e => e);
-    }
+  setDatasIniciais() {
+    const week = 7 * 24 * 60 * 60 * 1000;
+    const aux = new Date();
+    const base = new Date(aux.getFullYear(), aux.getMonth(), aux.getDate(), 0, 0, 0, 0);
+    const dtup = new Date(base.getTime() + (week))
+    const dtdown = new Date(base.getTime() - (week))
+    this.dataInicial = (dtdown).toISOString().split('T')[0];
+    this.dataFinal = (dtup).toISOString().split('T')[0];;
   }
 }

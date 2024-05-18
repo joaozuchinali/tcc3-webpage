@@ -139,7 +139,7 @@ export class ProjetosComponent implements OnInit{
     if(this.nome.trim() == '' || this.idequipe.trim() == '' || this.codigoAcesso.trim() == '') {
       this.dialogService.config({
         key: this.dialogKey, 
-        text: 'Prencha todos os campos antes de adicionar o projeto?', 
+        text: 'Prencha todos os campos antes de adicionar o projeto!', 
         title: 'Campos vazios',
         type: 'message'
       });

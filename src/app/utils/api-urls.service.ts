@@ -31,6 +31,8 @@ export class ApiUrlsService {
   readonly projetoDominios: string = 'registros/infosdominio/';
   readonly projetoDominiosTopo: string = 'registros/infosdominioext/';
   readonly projetoTempoDominios: string = 'registros/tempodominio/'
+  readonly projetoTempoDia: string = 'registros/tempodia/';
+  readonly projetoPesquisasDia: string = 'registros/pesquisasdia/';
 
   constructor(
   
