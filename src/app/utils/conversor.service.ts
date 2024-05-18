@@ -38,4 +38,34 @@ export class ConversorService {
 
     return Number((duration / (1000 * 60 * 60)).toFixed(5));
   }
+
+  weekDayToAbrev(day: number) {
+    let retorno = '';
+
+    switch (day) {
+      case 0:
+        retorno = 'DOM';
+        break;
+      case 1:
+        retorno = "SEG";
+        break;
+      case 2:
+        retorno = "TER";
+        break;
+      case 3:
+        retorno = "QUA";
+        break;
+      case 4:
+        retorno = "QUI";
+        break;
+      case 5:
+        retorno = "SEX";
+        break;
+      case 6:
+        retorno = "SAB";
+        break;
+    }
+
+    return retorno;
+  }
 }

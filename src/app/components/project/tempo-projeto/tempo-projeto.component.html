@@ -35,7 +35,7 @@
 
             <div class="card mt-4 scrlsty data-card-scroll" style="height: 600px;">
                 <div class="card-body p-0">
-                    <div class="sticky-top bg-white p-3 shadow-sm">
+                    <div class="sticky-top bg-white p-3 shadow-sm" style="z-index: 1;">
                         <div>
                             <span class="fs-6"><b>Domínios por tempo:</b> </span>
                         </div>
@@ -46,13 +46,12 @@
                                     <label style="font-size: 12px;" for="ordenacao">
                                         <b>Ordenação:</b>
                                     </label>
-                                    <select class="form-control form-control-sm w-100" id="ordenacao" [(ngModel)]="ordenacao" (change)="changeOrder()">
-                                        <optgroup label="Maiores valores">
-                                            <option value="1" [selected]="true">Maior tempo de navegação</option>
-                                        </optgroup>
-                                        <optgroup label="Menores valores">
-                                            <option value="2">Menor tempo de navegação</option>
-                                        </optgroup>
+
+                                    <select class="form-control form-control-sm w-100" id="ordenacao" [(ngModel)]="ordenaTempoList.indice"
+                                            (change)="changeOrder(ordenaTempoList)">
+                                        <option *ngFor="let dominioreg of ordenaTempoList.regras" value="{{dominioreg.indice}}">
+                                            {{dominioreg.label}}
+                                        </option>
                                     </select>
                                 </div>
         
@@ -60,9 +59,9 @@
                                     <label style="font-size: 12px;" for="nr-limite">
                                         <b>Limite:</b>
                                     </label>
-                                    <select class="form-control form-control-sm w-100" [(ngModel)]="limite" (change)="changeOrder()">
+                                    <select class="form-control form-control-sm w-100" [(ngModel)]="ordenaTempoList.limite" (change)="changeOrder(ordenaTempoList)">
                                         <option value="5">5 registros</option>
-                                        <option value="10" [selected]="true">10 registros</option>
+                                        <option value="10">10 registros</option>
                                         <option value="20">20 registros</option>
                                         <option value="30">30 registros</option>
                                         <option value="40">40 registros</option>
@@ -114,31 +113,33 @@
                 </div>
             </div>
 
-            <!-- 
-            <div class="card mt-4">
-                <div class="card-body">
-                    <div>
-                        <span class="fs-6"><b>Tempo de pesquisa por dia:</b> </span>
-                    </div>
-
-                    <div class="d-flex flex-row">
-                        <div class="form-group w-25 me-2">
-                            <label style="font-size: 12px;" for="data-inicial">
-                                <b>Data Inicial:</b>
-                            </label>
-                            <input class="form-control form-control-sm w-100" type="date" id="data-inicial" [(ngModel)]="dataFinal">
+            <!-- Tempo de pesquisas por dia -->
+            <div class="card mt-4 scrlsty data-card-scroll" style="height: 600px;">
+                <div class="card-body p-0">
+                    <div class="sticky-top bg-white p-3 shadow-sm" style="z-index: 1;">
+                        <div>
+                            <span class="fs-6"><b>Tempo de pesquisa por data:</b> </span>
                         </div>
 
-                        <div class="form-group w-25 me-2">
-                            <label style="font-size: 12px;" for="data-final">
-                                <b>Data Final:</b>
-                            </label>
-                            <input class="form-control form-control-sm w-100" type="date" id="data-final" [(ngModel)]="dataFinal">
+                        <div class="d-flex flex-row">
+                            <div class="form-group w-25 me-2">
+                                <label style="font-size: 12px;" for="data-inicial">
+                                    <b>Data Inicial:</b>
+                                </label>
+                                <input class="form-control form-control-sm w-100" type="date" id="data-inicial" [(ngModel)]="dataInicial" (change)="setDiasTempo()">
+                            </div>
+    
+                            <div class="form-group w-25 me-2">
+                                <label style="font-size: 12px;" for="data-final">
+                                    <b>Data Final:</b>
+                                </label>
+                                <input class="form-control form-control-sm w-100" type="date" id="data-final" [(ngModel)]="dataFinal" (change)="setDiasTempo()">
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="d-flex flex-column w-100">
-                        <div class="card mt-2" *ngFor="let item of listaDiasTempo">
+
+                    <div class="d-flex flex-column w-100 p-3" *ngIf="listaDiasTempoHtml.length">
+                        <div class="card mt-2" *ngFor="let item of listaDiasTempoHtml">
                             <div class="card-body">
                                 <div class="d-flex flex-row">
                                     <span class="ps-1 pe-3">
@@ -147,12 +148,6 @@
                                     <span class="text-danger pe-3">
                                         {{item.dia}}
                                     </span>
-                                    <span class="pe-3">
-                                        Pesquisas no dia: {{item.pesquisas}}
-                                    </span>
-                                    <span class="pe-3">
-                                        Usuários no dia: {{item.usuarios}}
-                                    </span>
                                     <span class="">
                                         Total: {{conversor.msToTime(item.total)}}
                                     </span>
@@ -160,9 +155,21 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="d-flex flex-column w-100 p-3" *ngIf="!listaDiasTempoHtml.length">
+                        <div class="card mt-3">
+                            <div class="card-body" >
+                                <div class="d-flex flex-row">
+                                    <span class="pe-2">
+                                        Sem registros.
+                                    </span>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div> 
-            -->
+            </div>
+           
         </div>
     </div>
 </div>

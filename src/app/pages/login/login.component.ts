@@ -103,6 +103,8 @@ export class LoginComponent implements OnInit{
   changeCard(): void {
     if(this.cardlogin == false) {
       this.clearFieldsCreate();
+    } else {
+      this.clearFieldsLogin();
     }
 
     this.cardlogin = !this.cardlogin;
@@ -158,5 +160,10 @@ export class LoginComponent implements OnInit{
     this.senhaCreate = '';
     this.nomeCreate = '';
     this.emailCreate = '';
+  }
+
+  clearFieldsLogin(): void {
+    this.emailLogin = '';
+    this.senhaLogin = '';
   }
 }
