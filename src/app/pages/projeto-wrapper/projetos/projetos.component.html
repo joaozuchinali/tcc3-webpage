@@ -77,8 +77,14 @@
 
     <!-- Listagem dos projetos -->
     <div class="row p-1 mb-2 mt-2">
-        <div class="col-md-12 p-0">
+        <div class="col-md-12 p-0" *ngIf="projetosAtuais.length">
             <app-item-projeto *ngFor="let projeto of projetosAtuais" [projeto]="projeto"></app-item-projeto>
+        </div>
+
+        <div class="card" *ngIf="!projetosAtuais.length">
+            <div class="card-body">
+                Lista de projetos vazia.
+            </div>
         </div>
     </div>
 
