@@ -36,9 +36,6 @@ import { OrdenadorService } from '../../../utils/ordenador.service';
 })
 export class TempoProjetoComponent implements OnInit, OnDestroy {
   public chartOptions: Partial<ChartOptions> | null = null;
-
-  listaDiasTempo: DiasTempo[] = [];
-listaDiasTempoHtml: DiasTempo[] = [];
   
   temposDominios: TempoDominio[] = [];
   temposDominiosHtml: TempoDominio[] = [];
@@ -85,7 +82,7 @@ listaDiasTempoHtml: DiasTempo[] = [];
 
   ngOnInit(): void {
     this.getInfosDominioPorTempo();
-    this.getInfosDominioPorDia();
+    // this.getInfosDominioPorDia();
     this.timerSet();
     this.setDatasIniciais();
   }
@@ -122,38 +119,6 @@ listaDiasTempoHtml: DiasTempo[] = [];
     });
   }
 
-  // retorna as informações de tempo por dia pesquisado
-  getInfosDominioPorDia() {
-    const projeto = this.currentProject.get();
-    
-    const query: GetInfosByIdprojeto = {
-      idprojeto: projeto.idprojeto
-    }
-
-    this.http.post<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.projetoTempoDia, query)
-    .subscribe({
-      next: (value) => {
-        if(value.data && value.data instanceof Array) {
-          const infos = <DiasTempoHTTP[]>value.data
-          this.buildDias(infos);
-          this.setDiasTempo();
-        }
-      },
-      error: (err) => {
-        console.log(err);
-
-        if(err.error.status && err.error.status == 'error') {
-          this.dialogService.config({
-            key: this.dialogKey, 
-            text: 'Não foi possível carregar os dados dos dias pesquisados.', 
-            title: 'Dados não encontrados',
-            type: 'message'
-          });
-        }
-      }
-    });
-  }
-
   timerSet() {
     if(this.timerProjeto && this.timerProjeto.unsubscribe){
       this.timerProjeto.unsubscribe();
@@ -165,7 +130,6 @@ listaDiasTempoHtml: DiasTempo[] = [];
 
     this.timerProjeto = timer((step * 1000), (step * 1000)).subscribe(() => {
       this.getInfosDominioPorTempo();
-      this.getInfosDominioPorDia();
     });
   }
 
@@ -224,21 +188,6 @@ listaDiasTempoHtml: DiasTempo[] = [];
     return 0;
   }
 
-  buildDias(vetor: DiasTempoHTTP[]) {
-    const vetorShow = vetor.map((e) => {
-      const diavec = e.diap.split('-').map(e => Number(e));
-      const diaaux = new Date(diavec[0], diavec[1] - 1, diavec[2], 0, 0, 0, 0);
-
-      return {
-        data: e.diap.split('-').reverse().join('/'),
-        dia: this.conversor.weekDayToAbrev(diaaux.getDay()),
-        total: Number(e.tempodia)
-      }
-    });
-    
-    this.listaDiasTempo = vetorShow;
-  }
-
   ngOnDestroy(): void {
     this.timerProjeto.unsubscribe();
   }
@@ -247,22 +196,6 @@ listaDiasTempoHtml: DiasTempo[] = [];
   setDominios(dominios: TempoDominio[]) {
     this.temposDominiosHtml = dominios;
     this.buildCharts();
-  }
-
-  setDiasTempo() {
-    console.log(this.dataFinal);
-    console.log(this.dataInicial);
-
-    this.listaDiasTempoHtml = this.listaDiasTempo.filter(e => {
-      console.log(e);
-      if (
-          e.data.split('/').reverse().join('-') >= this.dataInicial && 
-          e.data.split('/').reverse().join('-') <= this.dataFinal
-        )
-      return true;
-
-      return false;
-    });
   }
 
   changeOrder(vetorOrdenacao: ControleFiltragem) {
