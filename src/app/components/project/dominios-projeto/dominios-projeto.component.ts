@@ -217,15 +217,14 @@ export class DominiosProjetoComponent implements OnInit, OnDestroy {
   }
 
   setDiasPesquisa() {
-    console.log(this.dataFinal);
-    console.log(this.dataInicial);
+    // console.log(this.dataInicial);
+    // console.log(this.dataFinal);
 
     this.listaDiasPesquisaHtml = this.listaDiasPesquisa.filter(e => {
-      console.log(e);
       if (
           e.data.split('/').reverse().join('-') >= this.dataInicial && 
           e.data.split('/').reverse().join('-') <= this.dataFinal
-        )
+      )
       return true;
 
       return false;
