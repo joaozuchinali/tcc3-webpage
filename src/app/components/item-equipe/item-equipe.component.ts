@@ -14,6 +14,7 @@ import { CurrentUserService } from '../../utils/current-user.service';
 import { UsoEquipesDelete } from '../../interfaces/api/uso-equipes-delete';
 import { EquipeDelete } from '../../interfaces/api/equipe-delete';
 import { ListEquipesService } from '../../utils/list-equipes.service';
+import { EquipeUpdate } from '../../interfaces/api/equipe-update';
 
 @Component({
   selector: 'app-item-equipe',
@@ -22,6 +23,8 @@ import { ListEquipesService } from '../../utils/list-equipes.service';
 })
 export class ItemEquipeComponent implements OnInit{
   @Input('equipe') equipe: Equipe = {idequipe: -1, idstatus: -1, nome: ''};
+
+  nome: string = '';
 
   editEquipe: boolean = false;
   focus: boolean = false;
@@ -46,6 +49,7 @@ export class ItemEquipeComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.nome = this.equipe.nome;
   }
 
   // estilo focado/desfocado
@@ -158,7 +162,31 @@ export class ItemEquipeComponent implements OnInit{
     }, () => {this.updateEquipe()});
   }
   updateEquipe() {
-    // http post...
+    const equipeUpdate: EquipeUpdate = {
+      idequipe: this.equipe.idequipe,
+      nome: this.equipe.nome
+    };
+
+    this.http.put<HttpRetorno>(this.apiUrls.apiUrl + this.apiUrls.updateEquipe, equipeUpdate)
+    .subscribe({
+      next: (value) => {
+        console.log(value);
+        if(value.data && value.status == 'success' && value.data instanceof Object) {
+          this.listEquipes.list.next(true);
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        if(err.error.status && err.error.status == 'error') {
+          this.dialogService.config({
+            key: this.dialogKey, 
+            text: 'Falha ao atualizar equipe!', 
+            title: 'Erro',
+            type: 'message'
+          });
+        }
+      }
+    });
   }
 
   // Deleta a equipe

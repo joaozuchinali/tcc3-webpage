@@ -16,7 +16,8 @@ export class ApiUrlsService {
   
   readonly getEquipes: string = 'equipes/getall/';
   readonly createEquipe: string = 'equipes/create/';
-  readonly deleteEquipe: string = 'equipes/inativar/'
+  readonly deleteEquipe: string = 'equipes/inativar/';
+  readonly updateEquipe: string = 'equipes/update/';
 
   readonly createEquipeUso: string = 'equipeuso/create/';
   readonly deleteEquipeUso: string = 'equipeuso/delete';

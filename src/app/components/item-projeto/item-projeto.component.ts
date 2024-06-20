@@ -72,11 +72,21 @@ export class ItemProjetoComponent implements OnInit{
 
   // Validações e confirmações para update do projeto
   atualzarconfirm(): void {
-    if(this.codigoAcesso.trim() == '' || this.nome.trim() == '') {
+    if(String(this.codigoAcesso).trim() == '' || String(this.nome).trim() == '') {
       this.dialogService.config({
         key: this.dialogKey, 
         text: 'Prencha todos os campos antes de atualizar o projeto?', 
         title: 'Campos vazios',
+        type: 'message'
+      });
+      return;
+    }
+
+    if(String(this.codigoAcesso).length != 6) {
+      this.dialogService.config({
+        key: this.dialogKey, 
+        text: 'Insira um código de acesso com ao menos 6 dígitos?', 
+        title: 'Código de acesso indevido',
         type: 'message'
       });
       return;
